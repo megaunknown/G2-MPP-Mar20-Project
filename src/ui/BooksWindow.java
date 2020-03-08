@@ -10,6 +10,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -20,6 +21,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
@@ -45,7 +47,17 @@ public class BooksWindow {
 		primaryStage.setTitle("Books Page");
 		DataAccess dataAccess = new DataAccessFacade();
 		dataAccess.readBooksMap();
+		 Text scenetitle;
 		grid = new GridPane();
+		scenetitle = new Text("List of Books");
+        scenetitle.setId("welcome-text");
+        grid.setId("top-container");
+		grid.setAlignment(Pos.TOP_CENTER);	
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(25, 25, 25, 25));    
+        grid.add(scenetitle, 0, 0);
+        
 		grid.setAlignment(Pos.CENTER);
 		final TableView<Book> tableView = new TableView<Book>();
 		tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
@@ -65,7 +77,7 @@ public class BooksWindow {
 	    tableView.setItems(getBooksList());
 	    tableView.setMaxWidth(10000);
 	    tableView.autosize();
-	    grid.add(tableView, 0, 0);
+	    grid.add(tableView, 0, 1);
 
         /***********************************************/
 		Button addBookBtn = new Button("Add New Book");

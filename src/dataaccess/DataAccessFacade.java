@@ -140,7 +140,7 @@ public class DataAccessFacade implements DataAccess {
 		saveToStorage(StorageType.AUTHORS, authorsMap);
 	}
 
-
+	
 	public static void loadBookCopiesMap(List<BookCopy> bookCopiesList) {
 		HashMap<String, BookCopy> bookCopies = new HashMap<String, BookCopy>();
 		bookCopiesList.forEach( bc -> bookCopies.put(bc.getCopyNum()+"",bc));
@@ -150,7 +150,9 @@ public class DataAccessFacade implements DataAccess {
 	static void loadBookCopiesList(List<BookCopy> bookCopiesList) {
 		saveToStorage(StorageType.BOOKCOPIES, bookCopiesList);
 	}
-
+	static void loadCheckOutEntries(List<CheckOutEntry> checkoutList) {
+		saveToStorage(StorageType.CHECKOUTENTRIES, checkoutList);
+	}
 
 
 	static void loadBookMap(List<Book> bookList) {

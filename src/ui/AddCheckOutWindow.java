@@ -44,13 +44,16 @@ import javafx.util.Pair;
 public class AddCheckOutWindow {
 	public static final AddCheckOutWindow INSTANCE = new AddCheckOutWindow();
 
+	/*************************************** UI ************************************/
 	private Label lblLibMemberID,lblBookNumber,lblBookISBN;
 	private TextField txtFieldISBN,txtFieldCopyNumber;
 	
-	/**/
+	/*******************************************************************************/
 	private CheckOutEntry COE;
 	private BookCopy bookcopy;
 	private Book book;
+	
+	/****************************************************************************/
 	private ComboBox<String> cboMemberID;
 	private GridPane grid;
 	
@@ -124,9 +127,9 @@ public class AddCheckOutWindow {
 	
 	public void init(Stage primaryStage, SplitPane split) {
 		primaryStage.setTitle("Checkout Book & Search Books");
-		grid = new GridPane();
+		grid = new GridPane();  
 		grid.setId("top-container");
-		grid.setAlignment(Pos.CENTER);
+		grid.setAlignment(Pos.TOP_LEFT);
         grid.setHgap(5);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
@@ -164,7 +167,7 @@ public class AddCheckOutWindow {
 			public void handle(ActionEvent event) {
 				String strMessage = null;
 				
-				CheckOutEntry COE = searchHelper.createCheckOutEntry(cboMemberID.getValue(),
+				COE = searchHelper.createCheckOutEntry(cboMemberID.getValue(),
 						LoginWindow.INSTANCE.getUserID(),
 						txtFieldISBN.getText(),
 						Integer.parseInt(txtFieldCopyNumber.getText()) ,
@@ -174,7 +177,6 @@ public class AddCheckOutWindow {
 				{
 					
 					UI_Helper_Class.showMessageBoxInfo("Checkout Entry has been Saved Successfully.");
-					//Deserialize
 					SaveChanges();
 				}
 				else
@@ -189,7 +191,7 @@ public class AddCheckOutWindow {
 			@Override
 			public void handle(ActionEvent event) {
 				String strMessage = null;
-				CheckOutEntry COE = searchHelper.createCheckOutEntry(cboMemberID.getValue(),
+				COE = searchHelper.createCheckOutEntry(cboMemberID.getValue(),
 						LoginWindow.INSTANCE.getUserID(),
 						txtFieldISBN.getText(),
 						Integer.parseInt(txtFieldCopyNumber.getText()) ,
@@ -198,6 +200,7 @@ public class AddCheckOutWindow {
 				if(strMessage == null)
 				{
 					UI_Helper_Class.showMessageBoxInfo("Checkout Entry has been Saved Successfully.");
+					SaveChanges();
 					clear();
 				}
 				else

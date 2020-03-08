@@ -9,6 +9,7 @@ import business.Admin;
 import business.Author;
 import business.Book;
 import business.BookCopy;
+import business.CheckOutEntry;
 import business.Librarian;
 import business.LibraryMember;
 import business.User;
@@ -88,6 +89,12 @@ public class TestData {
 		}
 	};
 	
+	@SuppressWarnings("serial")
+	List<CheckOutEntry> allCheckOutEntries = new ArrayList<CheckOutEntry>() {
+		{}
+	};
+	
+	
 	public static void main(String[] args) {
 		TestData td = new TestData();
 		td.addressData();
@@ -97,7 +104,7 @@ public class TestData {
 		td.authorsData();
 		td.bookCopiesData();
 		td.libraryMemberData();
-		
+		td.checkOutEntriesData();
 		
 		DataAccess da = new DataAccessFacade();
 		System.out.println(da.readBooksMap());
@@ -106,6 +113,11 @@ public class TestData {
 		
 		td.bookData();
 		
+	}
+	
+	public void checkOutEntriesData()
+	{
+		DataAccessFacade.loadCheckOutEntries(allCheckOutEntries);
 	}
 	
 	public void authorsData() {
