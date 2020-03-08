@@ -37,7 +37,7 @@ public class LoginWindow {
 		this.userID = userID;
 	}
 
-	public Scene init(Stage primaryStage) {
+	public void init(Stage primaryStage) {
 		primaryStage.setTitle("Login Page");
 		StackPane stack = new StackPane();
 		ImageView image = new ImageView("ui/login-background.png");
@@ -125,7 +125,6 @@ public class LoginWindow {
 		Scene scene = new Scene(stack, 1000, 600);
 		scene.getStylesheets().add(getClass().getResource("library.css").toExternalForm());
 		primaryStage.setScene(scene);
-		return scene;
 	}
 
 }

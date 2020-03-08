@@ -20,7 +20,7 @@ public class searchHelper {
 	{
 		DataAccess dataAccess = new DataAccessFacade();
 		
-		HashMap<String,BookCopy> bookCopies = dataAccess.readBookCopiesMap();
+		HashMap<Integer,BookCopy> bookCopies = dataAccess.readBookCopiesMap();
 		HashMap<String,Book> books =  dataAccess.readBooksMap();
 		HashMap<String,LibraryMember> LibMember = dataAccess.readMembersMap();
 		HashMap<String,User> users = dataAccess.readUsersMap();

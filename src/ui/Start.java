@@ -1,7 +1,6 @@
 package ui;
 
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -32,9 +31,7 @@ public class Start extends Application {
 		//Commented By Mohamed Saleh
 		//LoginWindow.INSTANCE.init(primaryStage);
 		//Added By Mohamed Saleh
-		Scene scene = LoginWindow.INSTANCE.init(primaryStage);
-		primaryStage.setMaximized(true);
-		scene.getStylesheets().add(getClass().getResource("library.css").toExternalForm());
+		LoginWindow.INSTANCE.init(primaryStage);
 		
 		//*****************************************/
 		primaryStage.show();
