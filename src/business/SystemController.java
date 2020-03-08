@@ -52,7 +52,10 @@ public class SystemController implements ControllerInterface {
 	public List<BookCopy> allBookCopies(Book book) {
 		DataAccess da = new DataAccessFacade();
 		List<BookCopy> retval = new ArrayList<>();
-		da.readBookCopiesMap().values().forEach(a -> retval.add(a));
+		da.readBookCopiesMap().values().forEach(a -> {
+			if (a.getBook().getIsbn().equalsIgnoreCase(book.getIsbn()))
+				retval.add(a);
+		});
 		return retval;
 	}
 

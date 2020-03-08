@@ -4,8 +4,6 @@ import java.util.HashMap;
 
 import business.Book;
 import business.BookCopy;
-import business.ControllerInterface;
-import business.SystemController;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 import javafx.collections.FXCollections;
@@ -109,41 +107,16 @@ public class BooksWindow {
 		Button viewBookCopiesBtn = new Button("View Book Copies");
 		viewBookCopiesBtn.setDisable(true);
 
-		addBookCopyBtn.setOnAction(new EventHandler<ActionEvent>() {
+		viewBookCopiesBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
 				Book selectedBook = tableView.getSelectionModel().getSelectedItem();
-				ControllerInterface con = new SystemController();
-				con.allBookCopies(selectedBook);
-				Popup viewCopiesPopup = new Popup();
-				GridPane popupCopiesGrid = new GridPane();
-				popupGrid.setAlignment(Pos.CENTER);
-				popupGrid.setPrefSize(400, 200);
-				popupGrid.setStyle("-fx-background-color:white;-fx-border-color: black;-fx-border-width:2;-fx-border-radius:3;-fx-hgap:3;-fx-vgap:5;"); 
-				Label copyIDLabel = new Label("Book Copy ID");
-				TextField copyIDText = new TextField();
-				popupGrid.add(copyIDLabel, 0, 0);
-				popupGrid.add(copyIDText, 1, 0);
-				Button saveCopyIDBtn = new Button("Save Book Copy");
-				Button closeBtn = new Button("Close");
-				closeBtn.setOnAction(new EventHandler<ActionEvent>() {
-
-					@Override
-					public void handle(ActionEvent event) {
-						addCopyPopup.hide();
-						split.setDisable(false);
-					}
-
-				});
-				popupGrid.add(saveCopyIDBtn, 0, 1);
-				popupGrid.add(closeBtn, 1, 1);
-				addCopyPopup.getContent().add(popupGrid);
+				BookCopiesWindow.INSTANCE.init(primaryStage, split, selectedBook);
 			}
-
 		});
 
-		viewBookCopiesBtn.setOnAction(new EventHandler<ActionEvent>() {
+		addBookCopyBtn.setOnAction(new EventHandler<ActionEvent>() {
 
 			@Override
 			public void handle(ActionEvent event) {
@@ -168,6 +141,7 @@ public class BooksWindow {
 				BookCopy bookCopy = new BookCopy(selectedBook, Integer.parseInt(copyIDText.getText()), true);
 				DataAccess dataAccess = new DataAccessFacade();
 				dataAccess.saveNewBookCopy(bookCopy);
+				addCopyPopup.hide();
 				split.setDisable(false);
 			}
 

@@ -10,22 +10,17 @@ final public class BookCopy implements Serializable {
 	private static final long serialVersionUID = -63976228084869815L;
 	private Book book;
 	private int copyNum;
-	private boolean isAvailable;
+	private boolean available;
 
-	public BookCopy(Book book, int copyNum, boolean isAvailable) {
+	public BookCopy(Book book, int copyNum, boolean available) {
 		this.book = book;
 		this.copyNum = copyNum;
-		this.isAvailable = isAvailable;
+		this.available = available;
 	}
 
 	BookCopy(Book book, int copyNum) {
 		this.book = book;
 		this.copyNum = copyNum;
-	}
-
-
-	public boolean isAvailable() {
-		return isAvailable;
 	}
 
 	public int getCopyNum() {
@@ -36,8 +31,16 @@ final public class BookCopy implements Serializable {
 		return book;
 	}
 
+	public boolean isAvailable() {
+		return available;
+	}
+
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
+
 	public void changeAvailability() {
-		isAvailable = !isAvailable;
+		available = !available;
 	}
 
 	@Override
