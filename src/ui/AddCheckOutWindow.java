@@ -2,9 +2,11 @@ package ui;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-
+import java.util.*; 
 import org.controlsfx.control.CheckListView;
+import java.util.Map;
 
 import business.Author;
 import business.Book;
@@ -15,6 +17,7 @@ import business.LibraryMember;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 import dataaccess.searchHelper;
+import dataaccess.DataAccessFacade.StorageType;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -41,31 +44,24 @@ import javafx.util.Pair;
 public class AddCheckOutWindow {
 	public static final AddCheckOutWindow INSTANCE = new AddCheckOutWindow();
 
-	private Label lblLibMemberID, lblBook,lblBookNumber;
-	private TextField txtFieldCopyNumber;
-	//private final CheckListView<Pair<String, Author>> checkListViewAuthors = new CheckListView<Pair<String,Author>>();
-	private final CheckListView<String> checkListViewAuthors = new CheckListView<String>();
+	private Label lblLibMemberID,lblBookNumber,lblBookISBN;
+	private TextField txtFieldISBN,txtFieldCopyNumber;
 	
+	/**/
+	private CheckOutEntry COE;
+	private BookCopy bookcopy;
+	private Book book;
 	private ComboBox<String> cboMemberID;
-	private ComboBox<String> cboBookTitle;
 	private GridPane grid;
 	
 	public void clear() {
 		txtFieldCopyNumber.setText("");
-		cboBookTitle.setValue("");
 		cboMemberID.setValue("");
-		checkListViewAuthors.getCheckModel().clearChecks();
+		txtFieldISBN.setText("");
+		cboMemberID.setValue("");
 	}
 
-	public List<String> getLibraryMembersIDs()
-	{
-		List<String> strings = new ArrayList<String>();
-		DataAccess da = new DataAccessFacade();
-		HashMap<String,LibraryMember> membersMap = da.readMembersMap();
-		membersMap.values().forEach(a -> strings.add(a.getMemberId()));
-		
-		return strings;
-	}
+	
 
 	public ObservableList<String> getBookTitle()
 	{
@@ -80,8 +76,52 @@ public class AddCheckOutWindow {
 	/* This class is a singleton */
 	private AddCheckOutWindow() {}
 
-	final int WINDOW_WIDTH= 1024;
-	final int WINDOW_HEIGHT = 785;
+
+
+	private void SaveChanges()
+	{
+		DataAccess da = new DataAccessFacade();
+		//First Part ===> Save The Changes to Book Copy
+		HashMap<Integer,BookCopy> hasMapBookCopies = da.readBookCopiesMap();
+		// Using for-each loop 
+        for (Map.Entry mapElement : hasMapBookCopies.entrySet()) { 
+            String bookCopy = (String)mapElement.getKey(); 
+            bookcopy = (BookCopy)mapElement.getValue();
+            book = bookcopy.getBook();
+            if(bookCopy.equals(txtFieldCopyNumber.getText()) && 
+               book.getIsbn().equals(txtFieldISBN.getText()))
+            {
+            	bookcopy.changeAvailability();
+            	
+            	//Write the HashMap Again...
+            	List<BookCopy> bcList = HashMapToList(hasMapBookCopies);
+            	DataAccessFacade.loadBookCopiesMap(bcList);
+            	break;
+            }
+        }
+        
+        //Second Part ==> Save New Entry to Checkout
+        HashMap<String, CheckOutEntry> readCheckOutEntries = DataAccessFacade.readCheckOutEntriesMap();
+        readCheckOutEntries.put(COE.getEntryID()+"", COE);
+        DataAccessFacade.saveToStorage(StorageType.CHECKOUTENTRIES, readCheckOutEntries);
+        
+        
+        
+	}
+	
+	private List<BookCopy> HashMapToList(HashMap<Integer,BookCopy> hasMapBookCopies)
+	{
+		List<BookCopy> mList= new ArrayList<BookCopy>();
+		
+		 for (Map.Entry mapElement : hasMapBookCopies.entrySet()) { 
+	            String bookCopy = (String)mapElement.getKey(); 
+	            BookCopy bookcopy = (BookCopy)mapElement.getValue();
+	            mList.add(bookcopy);
+	        } 
+	
+		return mList;
+	}
+	
 	public void init(Stage primaryStage, SplitPane split) {
 		primaryStage.setTitle("Checkout Book & Search Books");
 		grid = new GridPane();
@@ -90,11 +130,6 @@ public class AddCheckOutWindow {
         grid.setHgap(5);
         grid.setVgap(10);
         grid.setPadding(new Insets(25, 25, 25, 25));
-       /*
-        grid.setPrefSize(WINDOW_WIDTH, WINDOW_HEIGHT); // Default width and height
-        grid.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
-        */
-       
         
         Text scenetitle = new Text("Checkout a Book");
         scenetitle.setId("welcome-text");
@@ -102,18 +137,17 @@ public class AddCheckOutWindow {
         grid.add(scenetitle, 0, 0);
 
         //Library Member
-        
         lblLibMemberID  = new Label("Library Member ID : ");
         grid.add(lblLibMemberID,0,1);
-    	cboMemberID = new ComboBox<String>(FXCollections .observableArrayList(getLibraryMembersIDs())); 
+    	cboMemberID = new ComboBox<String>(FXCollections .observableArrayList(searchHelper.getLibraryMembersIDs())); 
     	cboMemberID.setPrefWidth(180);
     	grid.add(cboMemberID,1,1);
     	
     	//*************************************************************************
-    	lblBook = new Label("Book Title : ");
-        grid.add(lblBook,0,2);
-        cboBookTitle = new ComboBox<String>(FXCollections .observableArrayList(getBookTitle())); 
-        grid.add(cboBookTitle,1,2);
+    	lblBookISBN = new Label("Book ISBN : ");
+        grid.add(lblBookISBN,0,2);
+        txtFieldISBN = new TextField();
+        grid.add(txtFieldISBN,1,2);
         //*************************************************************************
         lblBookNumber = new Label("Book Copy : ");
         grid.add(lblBookNumber,0,3);
@@ -131,20 +165,17 @@ public class AddCheckOutWindow {
 				String strMessage = null;
 				
 				CheckOutEntry COE = searchHelper.createCheckOutEntry(cboMemberID.getValue(),
-																	LoginWindow.INSTANCE.getUserID(),
-																	cboBookTitle.getValue(),
-																	Integer.parseInt(txtFieldCopyNumber.getText()) ,
-																	strMessage);
+						LoginWindow.INSTANCE.getUserID(),
+						txtFieldISBN.getText(),
+						Integer.parseInt(txtFieldCopyNumber.getText()) ,
+						strMessage);
 				
 				if(strMessage == null)
 				{
+					
 					UI_Helper_Class.showMessageBoxInfo("Checkout Entry has been Saved Successfully.");
 					//Deserialize
-					
-				//	searchHelper.getBookCopy(, Integer.parseInt(txtFieldCopyNumber.getText()))
-					
-				//	searchHelper.getBookCopy(ISBN, BookCopy)
-					//Serialize
+					SaveChanges();
 				}
 				else
 				{
@@ -160,7 +191,7 @@ public class AddCheckOutWindow {
 				String strMessage = null;
 				CheckOutEntry COE = searchHelper.createCheckOutEntry(cboMemberID.getValue(),
 						LoginWindow.INSTANCE.getUserID(),
-						cboBookTitle.getValue(),
+						txtFieldISBN.getText(),
 						Integer.parseInt(txtFieldCopyNumber.getText()) ,
 						strMessage);
 				

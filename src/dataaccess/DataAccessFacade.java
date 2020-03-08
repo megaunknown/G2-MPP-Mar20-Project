@@ -71,9 +71,9 @@ public class DataAccessFacade implements DataAccess {
 	
 	
 	@SuppressWarnings("unchecked")
-	public  HashMap<String, CheckOutEntry> readCheckOutEntriesMap() {
+	public  static HashMap<String, CheckOutEntry> readCheckOutEntriesMap() {
 		//Returns a Map with name/value pairs being
-		//   CopyId -> BookCopy
+		//   EntryID -> CheckOutEntry
 		return (HashMap<String, CheckOutEntry>) readFromStorage(StorageType.CHECKOUTENTRIES);
 	}
 	
@@ -141,11 +141,16 @@ public class DataAccessFacade implements DataAccess {
 	}
 
 
-	static void loadBookCopiesMap(List<BookCopy> bookCopiesList) {
+	public static void loadBookCopiesMap(List<BookCopy> bookCopiesList) {
 		HashMap<String, BookCopy> bookCopies = new HashMap<String, BookCopy>();
 		bookCopiesList.forEach( bc -> bookCopies.put(bc.getCopyNum()+"",bc));
 		saveToStorage(StorageType.BOOKCOPIES, bookCopies);
 	}
+	
+	static void loadBookCopiesList(List<BookCopy> bookCopiesList) {
+		saveToStorage(StorageType.BOOKCOPIES, bookCopiesList);
+	}
+
 
 
 	static void loadBookMap(List<Book> bookList) {
@@ -167,7 +172,7 @@ public class DataAccessFacade implements DataAccess {
 		saveToStorage(StorageType.MEMBERS, members);
 	}
 
-	static void saveToStorage(StorageType type, Object ob) {
+	public static void saveToStorage(StorageType type, Object ob) {
 		ObjectOutputStream out = null;
 		try {
 			Path path = FileSystems.getDefault().getPath(OUTPUT_DIR, type.toString());
@@ -236,17 +241,6 @@ public class DataAccessFacade implements DataAccess {
 
 
 
-
-/*
-
-	@Override
-	public HashMap<String, BookCopy> readCheckOutEntry() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-
-*/
 
 
 }

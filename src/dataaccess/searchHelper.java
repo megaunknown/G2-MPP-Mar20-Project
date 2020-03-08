@@ -1,7 +1,9 @@
 package dataaccess;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import business.Book;
 import business.BookCopy;
@@ -47,6 +49,12 @@ public class searchHelper {
 		if(bookCopy ==  null)
 		{
 			strMessage = "Book Copy is Not Valid";
+			return null;
+		}
+		
+		if(bookCopy.isAvailable())
+		{
+			strMessage = "Book Copy is Not Avaliable.";
 			return null;
 		}
 		
@@ -127,5 +135,15 @@ public class searchHelper {
 		if(book.getCopyNums().contains(copyNumber))
 			bResult = true;
 		return bResult;
+	}
+	
+	public static List<String> getLibraryMembersIDs()
+	{
+		List<String> strings = new ArrayList<String>();
+		DataAccess da = new DataAccessFacade();
+		HashMap<String,LibraryMember> membersMap = da.readMembersMap();
+		membersMap.values().forEach(a -> strings.add(a.getMemberId()));
+		
+		return strings;
 	}
 }

@@ -5,8 +5,6 @@ import java.util.HashMap;
 import business.Author;
 import business.Book;
 import business.BookCopy;
-import business.CheckOutEntry;
-import business.CheckOutRecord;
 import business.LibraryMember;
 import business.User;
 

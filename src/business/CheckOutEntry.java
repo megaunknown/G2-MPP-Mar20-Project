@@ -77,4 +77,10 @@ public class CheckOutEntry {
 	public void setBookCopy(BookCopy bookCopy) {
 		this.bookCopy = bookCopy;
 	}
+	
+	public int getEntryID()
+	{
+		return this.entryID;
+	}
+	
 }
