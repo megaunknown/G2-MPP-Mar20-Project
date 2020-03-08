@@ -5,6 +5,9 @@ import java.awt.Toolkit;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import business.User;
+import dataaccess.DataAccess;
+import dataaccess.DataAccessFacade;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Orientation;
@@ -25,10 +28,15 @@ public class HomeWindow {
 	/* This class is a singleton */
 	private HomeWindow() {
 	}
+	
+	public User getCurrentUser() {
+		DataAccess da = new DataAccessFacade();
+		return da.readUsersMap().get(LoginWindow.INSTANCE.getUserID());
+	}
 
 	public void init(Stage primaryStage) {
 		int numOfButtons= 5;
-		
+		User user = getCurrentUser();
 		primaryStage.setTitle("Home Page");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         SplitPane split = new SplitPane();
@@ -47,7 +55,6 @@ public class HomeWindow {
         		stack.setStyle("-fx-background-image: url(\"ui/library_bg.jpg\");\r\n" + 
         				"-fx-background-position: center;\r\n" + 
         				"-fx-background-repeat: no-repeat;\r\n" + 
-//        				"-fx-opacity: 0.2;\r\n" + 
         				"-fx-background-size: cover, auto;");
         		splitStatus.getItems().set(1, stack);
     			split.lookupAll(".split-pane-divider").stream()
@@ -79,18 +86,6 @@ public class HomeWindow {
         membersButton.setPrefWidth(500);
         membersButton.setPrefHeight(screenSize.getHeight()/numOfButtons);
         membersButton.setOnAction(new EventHandler<ActionEvent>(){
-//            @Override
-//            public void handle(ActionEvent event)
-//            {
-//        		primaryStage.setTitle("Members Page");            	
-//            	AllMembersWindow.INSTANCE.init(primaryStage, splitStatus);
-//        		splitStatus.getItems().set(1, new StackPane(new Label("Members")));
-//    			split.lookupAll(".split-pane-divider").stream()
-//                .forEach(div ->  {
-//                	div.setMouseTransparent(true);
-//                	div.setStyle("-fx-padding: 0 1 0 1");
-//                } );
-//            }     
         	@Override
             public void handle(ActionEvent event)
             {
@@ -119,23 +114,6 @@ public class HomeWindow {
                 } );
             }                
         });
-//        Button usersButton = new Button();
-//        usersButton.setText("Users");
-//        usersButton.setPrefWidth(500);
-//        usersButton.setPrefHeight(screenSize.getHeight()/6);
-//        usersButton.setOnAction(new EventHandler<ActionEvent>(){
-//            @Override
-//            public void handle(ActionEvent event)
-//            {
-//        		primaryStage.setTitle("Users Page");
-//        		splitStatus.getItems().set(1, new StackPane(new Label("Users")));
-//    			split.lookupAll(".split-pane-divider").stream()
-//                .forEach(div ->  {
-//                	div.setMouseTransparent(true);
-//                	div.setStyle("-fx-padding: 0 1 0 1");
-//                } );
-//            }                
-//        });
         Button logoutButton = new Button();
         logoutButton.setText("Logout");
         logoutButton.setPrefWidth(500);
@@ -149,10 +127,15 @@ public class HomeWindow {
         });
         GridPane  r = new GridPane();
         r.add(homeButton, 0, 0);
-        r.add(checkoutButton, 0, 1);
-        r.add(membersButton, 0, 2);
-        r.add(booksButton, 0, 3);
-//        r.add(usersButton, 0, 4);
+        if (user.hasLibrarianRole()) {
+            r.add(checkoutButton, 0, 1);
+        }
+        if (user.hasAdminRole()) {
+            r.add(membersButton, 0, 2);
+        }
+        if (user.hasAdminRole()) {
+            r.add(booksButton, 0, 3);
+        }
         r.add(logoutButton, 0, 4);
         split.getItems().add(r);
     	StackPane stack = new StackPane();
