@@ -144,7 +144,7 @@ public class AllCheckOutRecords{ //extends Stage implements LibWindow {
 	{
 		ObservableList<CheckOutEntry> strings = FXCollections.observableArrayList();
 		DataAccess da = new DataAccessFacade();
-		HashMap<String,CheckOutEntry> checkoutEntry = da.readCheckOutEntry();
+	//	HashMap<String,CheckOutEntry> checkoutEntry = da.readCheckOutEntry();
 		checkoutEntry.values().forEach(a -> strings.add(a));
 		return strings;
 	}
