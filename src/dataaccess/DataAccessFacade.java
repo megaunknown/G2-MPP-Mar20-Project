@@ -18,6 +18,7 @@ import business.BookCopy;
 import business.Fine;
 import business.LibraryMember;
 import business.User;
+import dataaccess.DataAccessFacade.StorageType;
 import business.CheckOutEntry;
 import business.CheckOutRecord;
 
@@ -55,9 +56,9 @@ public class DataAccessFacade implements DataAccess {
 	}
 
 	public void saveNewBookCopy(BookCopy bookCopy) {
-		HashMap<String, BookCopy> bookCopies = readBookCopiesMap();
+		HashMap<Integer, BookCopy> bookCopies = readBookCopiesMap();
 		int copyNum = bookCopy.getCopyNum();
-		bookCopies.put(copyNum +"", bookCopy);
+		bookCopies.put(copyNum, bookCopy);
 		saveToStorage(StorageType.BOOKCOPIES, bookCopies);
 	}
 
@@ -77,12 +78,11 @@ public class DataAccessFacade implements DataAccess {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public  HashMap<String, BookCopy> readBookCopiesMap() {
+	public  HashMap<Integer, BookCopy> readBookCopiesMap() {
 		//Returns a Map with name/value pairs being
 		//   CopyId -> BookCopy
-		return (HashMap<String, BookCopy>) readFromStorage(StorageType.BOOKCOPIES);
+		return (HashMap<Integer, BookCopy>) readFromStorage(StorageType.BOOKCOPIES);
 	}
-
 
 	@SuppressWarnings("unchecked")
 	public  HashMap<String,Book> readBooksMap() {

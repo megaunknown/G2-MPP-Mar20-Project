@@ -2,9 +2,6 @@ package ui;
 
 import java.util.HashMap;
 
-import org.controlsfx.control.CheckListView;
-
-import business.Author;
 import business.Book;
 import business.BookCopy;
 import business.ControllerInterface;
@@ -27,25 +24,12 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 
 public class BooksWindow {
 	public static final BooksWindow INSTANCE = new BooksWindow();
-	private Label lblISBN, lblTitle,lblAuthors;
-	private TextField txtISBN, txtTitle;
-	
-	private final CheckListView<Pair<String, Author>> checkListViewAuthors = new CheckListView<Pair<String,Author>>();
 
 	private GridPane grid;
-
-	private boolean isInitialized = false;
-	public boolean isInitialized() {
-		return isInitialized;
-	}
-	public void isInitialized(boolean val) {
-		isInitialized = val;
-	}
 
 	public ObservableList<Book> getBooksList()
 	{
@@ -64,11 +48,7 @@ public class BooksWindow {
 		DataAccess dataAccess = new DataAccessFacade();
 		dataAccess.readBooksMap();
 		grid = new GridPane();
-//		grid.setId("top-container");
 		grid.setAlignment(Pos.CENTER);
-//        grid.setHgap(5);
-//        grid.setVgap(10);
-//        grid.setPadding(new Insets(25, 25, 25, 25));
 		final TableView<Book> tableView = new TableView<Book>();
 		tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 		tableView.prefWidthProperty().bind(split.widthProperty());
@@ -87,11 +67,10 @@ public class BooksWindow {
 	    tableView.setItems(getBooksList());
 	    tableView.setMaxWidth(10000);
 	    tableView.autosize();
-//	    tableView.setFillWidth(tableView.getColumns(), true);
 	    grid.add(tableView, 0, 0);
 
-        /*********************************************************************/
-	    Button addBookBtn = new Button("Add New Book");
+        /***********************************************/
+		Button addBookBtn = new Button("Add New Book");
 
 		addBookBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
