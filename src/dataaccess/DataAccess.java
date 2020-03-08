@@ -2,13 +2,25 @@ package dataaccess;
 
 import java.util.HashMap;
 
+import business.Author;
 import business.Book;
+import business.BookCopy;
+import business.CheckOutEntry;
+import business.CheckOutRecord;
 import business.LibraryMember;
-import dataaccess.DataAccessFacade.StorageType;
+import business.User;
 
-public interface DataAccess { 
+public interface DataAccess {
 	public HashMap<String,Book> readBooksMap();
-	public HashMap<String,User> readUserMap();
-	public HashMap<String, LibraryMember> readMemberMap();
-	public void saveNewMember(LibraryMember member); 
+	public HashMap<String,User> readUsersMap();
+	public HashMap<String, LibraryMember> readMembersMap();
+	public HashMap<String,Author> readAuthorsMap();
+	public HashMap<String,BookCopy> readBookCopiesMap();
+//	public HashMap<String,CheckOutEntry> readCheckOutEntry();
+//	public HashMap<String,CheckOutRecord> readCheckOutRecords();
+	public void saveNewMember(LibraryMember member);
+	public void editMember(LibraryMember member);
+	public void saveNewBookCopy(BookCopy bookCopy);
+	public void saveNewBook(Book book);
+
 }

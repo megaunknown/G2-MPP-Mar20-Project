@@ -16,24 +16,24 @@ public class Main {
 	//Returns a list of all ids of LibraryMembers whose zipcode contains the digit 3
 	public static List<String> allWhoseZipContains3() {
 		DataAccess da = new DataAccessFacade();
-		Collection<LibraryMember> members = da.readMemberMap().values();
+		Collection<LibraryMember> members = da.readMembersMap().values();
 		List<LibraryMember> mems = new ArrayList<>();
 		mems.addAll(members);
 		//implement
 		return null;
-		
+
 	}
 	//Returns a list of all ids of  LibraryMembers that have an overdue book
 	public static List<String> allHavingOverdueBook() {
 		DataAccess da = new DataAccessFacade();
-		Collection<LibraryMember> members = da.readMemberMap().values();
+		Collection<LibraryMember> members = da.readMembersMap().values();
 		List<LibraryMember> mems = new ArrayList<>();
 		mems.addAll(members);
 		//implement
 		return null;
-		
+
 	}
-	
+
 	//Returns a list of all isbns of  Books that have multiple authors
 	public static List<String> allHavingMultipleAuthors() {
 		DataAccess da = new DataAccessFacade();
@@ -42,7 +42,7 @@ public class Main {
 		bs.addAll(books);
 		//implement
 		return null;
-		
+
 		}
 
 }
