@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import business.Address;
 import business.LibraryMember;
+import business.ValidationException;
+import business.ValidationHelper;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 import javafx.event.ActionEvent;
@@ -40,11 +42,11 @@ public class AddMemberWindow {
         scenetitle.setId("welcome-text");
         grid.add(scenetitle, 0, 0);
 
-        grid.add(new Label("First Name"),0,1);
+        grid.add(new Label("First Name (*)"),0,1);
         txtFirstName = new TextField();
         grid.add(txtFirstName,1,1);
 
-        grid.add(new Label("Last Name"),0,2);
+        grid.add(new Label("Last Name (*)"),0,2);
         txtLastName = new TextField();
         grid.add(txtLastName,1,2);
         
@@ -75,21 +77,28 @@ public class AddMemberWindow {
 
         saveBookBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent event) {				
-				DataAccess dataAccess = new DataAccessFacade();
-				String memberId= UUID.randomUUID().toString();
-				dataAccess.saveNewMember(new LibraryMember(memberId, txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), new Address(txtStreet.getText(), txtCity.getText(), txtState.getText(), txtZip.getText())));
-				AllMembersWindow.INSTANCE.init(primaryStage, split);
+			public void handle(ActionEvent event) {	
+				if(isDataValid())
+				{
+					DataAccess dataAccess = new DataAccessFacade();
+					String memberId= UUID.randomUUID().toString();
+					dataAccess.saveNewMember(new LibraryMember(memberId, txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), new Address(txtStreet.getText(), txtCity.getText(), txtState.getText(), txtZip.getText())));
+					AllMembersWindow.INSTANCE.init(primaryStage, split);
+				}
 			}
 		});
 
         saveNewBookBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				DataAccess dataAccess = new DataAccessFacade();
-				String memberId= UUID.randomUUID().toString();
-				dataAccess.saveNewMember(new LibraryMember(memberId, txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), new Address(txtStreet.getText(), txtCity.getText(), txtState.getText(), txtZip.getText())));
-				clear();
+				if(isDataValid())
+				{
+					DataAccess dataAccess = new DataAccessFacade();
+					String memberId= UUID.randomUUID().toString();
+					dataAccess.saveNewMember(new LibraryMember(memberId, txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), new Address(txtStreet.getText(), txtCity.getText(), txtState.getText(), txtZip.getText())));
+					UI_Helper_Class.showMessageBoxInfo("Saved successfully");
+					clear();
+				}
 			}
 		});
 
@@ -101,7 +110,7 @@ public class AddMemberWindow {
 		});
 
         HBox hBack = new HBox(10);
-        hBack.setAlignment(Pos.CENTER);
+        hBack.setAlignment(Pos.CENTER_RIGHT);
         hBack.getChildren().add(saveBookBtn);
         hBack.getChildren().add(saveNewBookBtn);
         hBack.getChildren().add(backBtn);
@@ -113,6 +122,21 @@ public class AddMemberWindow {
         	div.setStyle("-fx-padding: 0 1 0 1");
         } );
 
+	}
+	
+	public boolean isDataValid()
+	{
+		try {				
+			ValidationHelper<String> validate= new ValidationHelper<String>();
+			validate.mandatoryValidator(txtFirstName.getText());
+			validate.mandatoryValidator(txtLastName.getText());
+		}
+		catch(ValidationException ex)
+		{
+			UI_Helper_Class.showMessageBoxError("Error! " + ex.getMessage());
+			return false;
+		}
+		return true;
 	}
 	
 	public void clear() {		

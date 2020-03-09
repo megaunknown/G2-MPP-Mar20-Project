@@ -67,7 +67,7 @@ public class AllMembersWindow{ //extends Stage implements LibWindow {
         grid.add(scenetitle, 0, 0);
 
         tvMembers = new TableView<LibraryMember>();
-        tvMembers.prefHeightProperty().bind(split.heightProperty().subtract(250));    
+        tvMembers.prefHeightProperty().bind(split.heightProperty().subtract(100));    
         tvMembers.prefWidthProperty().bind(split.widthProperty());;
                 
 	    TableColumn<LibraryMember, String> col = new TableColumn<>("Member ID");	    
@@ -108,17 +108,14 @@ public class AllMembersWindow{ //extends Stage implements LibWindow {
 		Button editBtn = new Button("Edit Selected Member");
 		editBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent event) {				
-				LibraryMember member= tvMembers.getSelectionModel().getSelectedItem();	
-				if(member != null)
-				{
-					EditMemberWindow.INSTANCE.init(primaryStage, split, member);
-				}
+			public void handle(ActionEvent event) {		
+				EditMemberWindow.INSTANCE.init(primaryStage, split, tvMembers.getSelectionModel().getSelectedItem());
 			}
 		});		
+		editBtn.setDisable(true);
 		
         HBox hBack = new HBox(10);
-        hBack.setAlignment(Pos.CENTER);
+        hBack.setAlignment(Pos.CENTER_RIGHT);
         hBack.getChildren().add(editBtn);
         hBack.getChildren().add(addMemberBtn);        
         grid.add(hBack, 0, 3);
@@ -130,6 +127,12 @@ public class AllMembersWindow{ //extends Stage implements LibWindow {
         	div.setMouseTransparent(true);
         	div.setStyle("-fx-padding: 0 1 0 1");
         } );
+		
+		tvMembers.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
+	        if (newSelection != null) {
+	        	editBtn.setDisable(false);
+	        }
+	    });
      
 	}
 	

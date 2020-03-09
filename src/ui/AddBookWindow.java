@@ -8,6 +8,7 @@ import org.controlsfx.control.CheckListView;
 
 import business.Author;
 import business.Book;
+import business.ValidationException;
 import business.ValidationHelper;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
@@ -73,17 +74,17 @@ public class AddBookWindow {
 
         grid.add(scenetitle, 0, 0);
 
-        lblTitle  = new Label("Title");
-        grid.add(lblTitle,0,1);
-        txtTitle = new TextField();
-        grid.add(txtTitle,1,1);
-
-        lblISBN = new Label("ISBN");
-        grid.add(lblISBN,0,2);
+        lblISBN = new Label("ISBN (*)");
+        grid.add(lblISBN,0,1);
         txtISBN = new TextField();
-        grid.add(txtISBN,1,2);
+        grid.add(txtISBN,1,1);
+        
+        lblTitle  = new Label("Title (*)");
+        grid.add(lblTitle,0,2);
+        txtTitle = new TextField();
+        grid.add(txtTitle,1,2);
 
-        lblAuthors = new Label("Authors");
+        lblAuthors = new Label("Authors (*)");
         grid.add(lblAuthors,0,3);
 
         checkListViewAuthors.setItems(getAuthorsList());
@@ -126,32 +127,33 @@ public class AddBookWindow {
         saveBookBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				
-				/*
-				ValidationHelper<TextField> val = new ValidationHelper<TextField>();
-				val.mandatoryValidator(txtISBN);
-				*/
-				
-				ObservableList<Pair<String,Author>> strings = checkListViewAuthors.getCheckModel().getCheckedItems();
-				List<Author> lst = new ArrayList<Author>();
-				strings.forEach(val -> lst.add(val.getValue()));
-				int maxCheckoutLength= rbMaxCheckoutLength_7.isSelected()? 7: 21;
-				DataAccess dataAccess = new DataAccessFacade();
-				dataAccess.saveNewBook(new Book(txtISBN.getText(), txtTitle.getText(), maxCheckoutLength, lst));
-				BooksWindow.INSTANCE.init(primaryStage, split);
+				if(isDataValid())
+				{				
+					ObservableList<Pair<String,Author>> strings = checkListViewAuthors.getCheckModel().getCheckedItems();
+					List<Author> lst = new ArrayList<Author>();
+					strings.forEach(val -> lst.add(val.getValue()));
+					int maxCheckoutLength= rbMaxCheckoutLength_7.isSelected()? 7: 21;
+					DataAccess dataAccess = new DataAccessFacade();
+					dataAccess.saveNewBook(new Book(txtISBN.getText(), txtTitle.getText(), maxCheckoutLength, lst));
+					BooksWindow.INSTANCE.init(primaryStage, split);
+				}
 			}
 		});
 
         saveNewBookBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				ObservableList<Pair<String,Author>> strings = checkListViewAuthors.getCheckModel().getCheckedItems();
-				List<Author> lst = new ArrayList<Author>();
-				strings.forEach(val -> lst.add(val.getValue()));
-				int maxCheckoutLength= rbMaxCheckoutLength_7.isSelected()? 7: 21;
-				DataAccess dataAccess = new DataAccessFacade();
-				dataAccess.saveNewBook(new Book(txtISBN.getText(), txtTitle.getText(), maxCheckoutLength, lst));
-				clear();
+				if(isDataValid())
+				{
+					ObservableList<Pair<String,Author>> strings = checkListViewAuthors.getCheckModel().getCheckedItems();
+					List<Author> lst = new ArrayList<Author>();
+					strings.forEach(val -> lst.add(val.getValue()));
+					int maxCheckoutLength= rbMaxCheckoutLength_7.isSelected()? 7: 21;
+					DataAccess dataAccess = new DataAccessFacade();
+					dataAccess.saveNewBook(new Book(txtISBN.getText(), txtTitle.getText(), maxCheckoutLength, lst));
+					UI_Helper_Class.showMessageBoxInfo("Saved successfully");
+					clear();
+				}
 			}
 		});
 
@@ -163,11 +165,11 @@ public class AddBookWindow {
 		});
 
         HBox hBack = new HBox(10);
-        hBack.setAlignment(Pos.CENTER);
+        hBack.setAlignment(Pos.CENTER_RIGHT);
         hBack.getChildren().add(saveBookBtn);
         hBack.getChildren().add(saveNewBookBtn);
         hBack.getChildren().add(backBtn);
-        grid.add(hBack, 0, 6);
+        grid.add(hBack, 0, 6, 2, 1);
         split.getItems().set(1, grid);
 		split.lookupAll(".split-pane-divider").stream()
         .forEach(div ->  {
@@ -175,5 +177,25 @@ public class AddBookWindow {
         	div.setStyle("-fx-padding: 0 1 0 1");
         } );
 
+	}
+	
+	public boolean isDataValid()
+	{
+		try {				
+			ValidationHelper<String> validate= new ValidationHelper<String>();
+			validate.mandatoryValidator(txtTitle.getText());
+			validate.mandatoryValidator(txtISBN.getText());
+			
+			ValidationHelper<ObservableList> validateList= new ValidationHelper<ObservableList>();
+			validateList.mandatoryValidator(checkListViewAuthors.getCheckModel().getCheckedItems());
+		}
+		catch(ValidationException ex)
+		{
+			UI_Helper_Class.showMessageBoxError("Error! " + ex.getMessage());
+			return false;
+		}
+		
+		
+		return true;
 	}
 }

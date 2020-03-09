@@ -4,6 +4,8 @@ import java.util.UUID;
 
 import business.Address;
 import business.LibraryMember;
+import business.ValidationException;
+import business.ValidationHelper;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 import javafx.event.ActionEvent;
@@ -48,13 +50,13 @@ public class EditMemberWindow {
         grid.add(new Label("Member ID"),0,1);
         grid.add(lblMemberId,1,1);
 
-        grid.add(new Label("First Name"),0,2);
+        grid.add(new Label("First Name (*)"),0,2);
         txtFirstName = new TextField();
         txtFirstName.setText(member.getFirstName());
         txtFirstName.setPrefWidth(400);
         grid.add(txtFirstName,1,2);
 
-        grid.add(new Label("Last Name"),0,3);
+        grid.add(new Label("Last Name (*)"),0,3);
         txtLastName = new TextField();
         txtLastName.setText(member.getLastName());
         grid.add(txtLastName,1,3);
@@ -90,10 +92,12 @@ public class EditMemberWindow {
 
         saveBookBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
-			public void handle(ActionEvent event) {				
-				DataAccess dataAccess = new DataAccessFacade();				
-				dataAccess.editMember(new LibraryMember(lblMemberId.getText(), txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), new Address(txtStreet.getText(), txtCity.getText(), txtState.getText(), txtZip.getText())));
-				AllMembersWindow.INSTANCE.init(primaryStage, split);
+			public void handle(ActionEvent event) {		
+				if(isDataValid()) {
+					DataAccess dataAccess = new DataAccessFacade();				
+					dataAccess.editMember(new LibraryMember(lblMemberId.getText(), txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), new Address(txtStreet.getText(), txtCity.getText(), txtState.getText(), txtZip.getText())));
+					AllMembersWindow.INSTANCE.init(primaryStage, split);
+				}
 			}
 		});
         
@@ -117,6 +121,21 @@ public class EditMemberWindow {
         	div.setStyle("-fx-padding: 0 1 0 1");
         } );
 
+	}
+
+	public boolean isDataValid()
+	{
+		try {				
+			ValidationHelper<String> validate= new ValidationHelper<String>();
+			validate.mandatoryValidator(txtFirstName.getText());
+			validate.mandatoryValidator(txtLastName.getText());
+		}
+		catch(ValidationException ex)
+		{
+			UI_Helper_Class.showMessageBoxError("Error! " + ex.getMessage());
+			return false;
+		}
+		return true;
 	}
 	
 	public void clear() {		

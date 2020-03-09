@@ -30,8 +30,21 @@ final public class Address implements Serializable {
 		return zip;
 	}
 	@Override
-	public String toString() {
-		return street + ", " + city + ", " + zip;
+	public String toString() {	
+		String address= "";
+		if(!street.isEmpty())
+			address += street + ", ";
+		
+		if(!city.isEmpty())
+			address += city + ", ";
+		
+		if(!state.isEmpty())
+			address += state + ", ";
+		
+		if(!zip.isEmpty())
+			address += zip + ", ";
+		
+		return address.isEmpty()? "": address.substring(0, address.length()-3);
 		
 	}
 }

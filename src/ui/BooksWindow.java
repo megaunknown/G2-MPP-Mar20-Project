@@ -62,6 +62,7 @@ public class BooksWindow {
 		final TableView<Book> tableView = new TableView<Book>();
 		tableView.setColumnResizePolicy(TableView.UNCONSTRAINED_RESIZE_POLICY);
 		tableView.prefWidthProperty().bind(split.widthProperty());
+		tableView.prefHeightProperty().bind(split.heightProperty().subtract(100));
 		tableView.setEditable(true);
 	    TableColumn<Book, String> isbnCol = new TableColumn<>("ISBN");
 	    isbnCol.setCellValueFactory(new PropertyValueFactory<>("isbn"));
@@ -160,11 +161,11 @@ public class BooksWindow {
 		});
 
         HBox hBack = new HBox(10);
-        hBack.setAlignment(Pos.CENTER);
+        hBack.setAlignment(Pos.CENTER_RIGHT);
         hBack.getChildren().add(addBookBtn);
         hBack.getChildren().add(addBookCopyBtn);
         hBack.getChildren().add(viewBookCopiesBtn);
-        grid.add(hBack, 0, 2);
+        grid.add(hBack, 0, 3);
         split.getItems().set(1, grid);
 		split.lookupAll(".split-pane-divider").stream()
         .forEach(div ->  {
