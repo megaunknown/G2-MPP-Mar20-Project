@@ -44,7 +44,7 @@ public class HomeWindow {
 	}
 
 	public void init(Stage primaryStage) {
-		int numOfButtons= 6;//Update from 5 to 6 by Mohamed Saleh
+		int numOfButtons= 5;
 		User user = getCurrentUser();
 		primaryStage.setTitle("Home Page");
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -144,43 +144,18 @@ public class HomeWindow {
 				}
             }                
         });
-        
-        //Added By Mohamed Saleh
-        Button checkoutedButton = new Button();
-        checkoutedButton.setText("CheckedOut Records");
-        checkoutedButton.setPrefWidth(500);
-        checkoutedButton.setPrefHeight(screenSize.getHeight()/numOfButtons);
-        checkoutedButton.setOnAction(new EventHandler<ActionEvent>(){
-            @Override
-            public void handle(ActionEvent event)
-            {
-    	        CheckoutRecords.INSTANCE.init(primaryStage, splitStatus);
-    			split.lookupAll(".split-pane-divider").stream()
-                .forEach(div ->  {
-                	div.setMouseTransparent(true);
-                	div.setStyle("-fx-padding: 0 1 0 1");
-                } );
-            }                
-        });
-        /**********************************/
-        
         GridPane  r = new GridPane();
         r.add(homeButton, 0, 0);
         if (user.hasLibrarianRole()) {
             r.add(checkoutButton, 0, 1);
-            r.add(checkoutedButton, 0, 3);
         }
         if (user.hasAdminRole()) {
             r.add(membersButton, 0, 2);
         }
         if (user.hasAdminRole()) {
-            r.add(booksButton, 0, 4);
+            r.add(booksButton, 0, 3);
         }
-        r.add(logoutButton, 0, 5);
-        
-        //Added by Mohamed Saleh
-        
-        /*****************************************/
+        r.add(logoutButton, 0, 4);
         split.getItems().add(r);
     	StackPane stack = new StackPane();
 		stack.setStyle("-fx-background-image: url(\"ui/library_bg.jpg\");\r\n" + 

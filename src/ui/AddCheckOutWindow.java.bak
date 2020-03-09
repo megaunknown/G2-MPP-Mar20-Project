@@ -24,18 +24,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
@@ -47,8 +43,6 @@ import javafx.util.Pair;
 
 public class AddCheckOutWindow {
 	public static final AddCheckOutWindow INSTANCE = new AddCheckOutWindow();
-	
-	private SplitPane split;
 
 	/*************************************** UI ************************************/
 	private Label lblLibMemberID,lblBookNumber,lblBookISBN;
@@ -69,6 +63,8 @@ public class AddCheckOutWindow {
 		txtFieldISBN.setText("");
 		cboMemberID.setValue("");
 	}
+
+	
 
 	public ObservableList<String> getBookTitle()
 	{
@@ -208,6 +204,7 @@ public class AddCheckOutWindow {
 					{
 						UI_Helper_Class.showMessageBoxError("Error during Checkout Process.");
 					}
+					
 				}
 				else
 				{
@@ -249,8 +246,10 @@ public class AddCheckOutWindow {
 		Button searchBtn = new Button("Search By ISBN");
 		grid.add(searchBtn, 0, 8,2,1);
 		searchBtn.setOnAction( new EventHandler<ActionEvent>() {
+			
 			@Override
 			public void handle(ActionEvent event) {
+			
 				if(isbnTextField.getText().toString().length() == 0)
 				{
 					UI_Helper_Class.showMessageBoxWarning("You Must Type Book ISBN");
@@ -280,67 +279,13 @@ public class AddCheckOutWindow {
 					}
 				}
 				
-				if(!bSearchResult){
+				if(!bSearchResult)
+				{
 					UI_Helper_Class.showMessageBoxError(book.getTitle() + " book copy is no available copies");
+					
 				}
 			}
 		});
-		
-		
-		/****************************** Adding Check Out Records **********************/
-		/*
-		Text checkedOut = new Text("Checked Out Records....");
-		checkedOut.setId("welcome-text");
-        grid.add(checkedOut, 0, 9);
-       
-		GridPane gridCheckedOutRecords = new GridPane();
-		gridCheckedOutRecords.setId("top-container");
-		gridCheckedOutRecords.setAlignment(Pos.TOP_CENTER);
-		gridCheckedOutRecords.setHgap(5);
-		gridCheckedOutRecords.setVgap(10);
-		gridCheckedOutRecords.setPadding(new Insets(25, 25, 25, 25));
-		
-		grid.add(gridCheckedOutRecords, 1, 10,5,1);
-		
-		 
-		TableView<CheckOutEntry> tvCheckedOutRecords;
-		tvCheckedOutRecords = new TableView<CheckOutEntry>();
-		tvCheckedOutRecords.prefHeightProperty().bind(split.heightProperty().subtract(100));    
-		tvCheckedOutRecords.prefWidthProperty().bind(split.widthProperty());;
-                
-	    TableColumn<CheckOutEntry, String> col = new TableColumn<>("SequanceID");	    
-	    col.setCellValueFactory(new PropertyValueFactory<>("entryID"));
-	    tvCheckedOutRecords.getColumns().add(col);
-	    
-	    col = new TableColumn<>("Checkout Date");
-	    col.setCellValueFactory(new PropertyValueFactory<>("checkoutDate"));
-	    tvCheckedOutRecords.getColumns().add(col);
-	    
-	    col = new TableColumn<>("Due Date");
-	    col.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-	    tvCheckedOutRecords.getColumns().add(col);
-	    
-	    col = new TableColumn<>("Return Date");
-	    col.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
-	    tvCheckedOutRecords.getColumns().add(col);
-	    
-	    col = new TableColumn<>("Librian User");
-	    col.setCellValueFactory(new PropertyValueFactory<>("user"));
-	    tvCheckedOutRecords.getColumns().add(col);
 
-	    tvCheckedOutRecords.setItems(getCheckOutRecords());	    
-	    
-	    grid.add(tvCheckedOutRecords, 0, 11);	
-	    */
 	}
-	
-	public ObservableList<CheckOutEntry> getCheckOutRecords()
-	{
-		ObservableList<CheckOutEntry> obList = FXCollections.observableArrayList();
-		DataAccess da = new DataAccessFacade();
-		HashMap<String,CheckOutEntry> memberMap = DataAccessFacade.readCheckOutEntriesMap();
-		memberMap.values().forEach(a -> obList.add(a));
-		return obList;
-	}
-	
 }

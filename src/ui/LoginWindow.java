@@ -1,5 +1,7 @@
 package ui;
 
+import java.util.Optional;
+
 import business.ControllerInterface;
 import business.LoginException;
 import business.SystemController;
@@ -8,13 +10,17 @@ import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
@@ -23,6 +29,8 @@ import javafx.stage.Stage;
 
 public class LoginWindow {
 	private String userID;
+	private double xOffset = 0;
+	private double yOffset = 0;
 	public static final LoginWindow INSTANCE = new LoginWindow();
 
 	/* This class is a singleton */
@@ -74,28 +82,22 @@ public class LoginWindow {
 		HBox hbBtn = new HBox(10);
 		hbBtn.setAlignment(Pos.BOTTOM_RIGHT);
 		hbBtn.getChildren().add(loginBtn);
-		userTextField.setOnKeyPressed(new EventHandler<KeyEvent>()
-	    {
-	        @Override
-	        public void handle(KeyEvent ke)
-	        {
-	            if (ke.getCode().equals(KeyCode.ENTER))
-	            {
-	            	loginBtn.fire();
-	            }
-	        }
-	    });
-		pwBox.setOnKeyPressed(new EventHandler<KeyEvent>()
-	    {
-	        @Override
-	        public void handle(KeyEvent ke)
-	        {
-	            if (ke.getCode().equals(KeyCode.ENTER))
-	            {
-	            	loginBtn.fire();
-	            }
-	        }
-	    });
+		userTextField.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					loginBtn.fire();
+				}
+			}
+		});
+		pwBox.setOnKeyPressed(new EventHandler<KeyEvent>() {
+			@Override
+			public void handle(KeyEvent ke) {
+				if (ke.getCode().equals(KeyCode.ENTER)) {
+					loginBtn.fire();
+				}
+			}
+		});
 
 		grid.add(hbBtn, 1, 4);
 
@@ -122,7 +124,40 @@ public class LoginWindow {
 		grid.setMaxSize(400, 200);
 		grid.setStyle("-fx-background-color: #FFFFFF");
 		stack.getChildren().add(grid);
+		stack.setOnMousePressed(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				xOffset = event.getSceneX();
+				yOffset = event.getSceneY();
+			}
+		});
+		stack.setOnMouseDragged(new EventHandler<MouseEvent>() {
+			@Override
+			public void handle(MouseEvent event) {
+				primaryStage.setX(event.getScreenX() - xOffset);
+				primaryStage.setY(event.getScreenY() - yOffset);
+			}
+		});
 		Scene scene = new Scene(stack, 1000, 600);
+		scene.addEventHandler(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+
+			@Override
+			public void handle(KeyEvent t) {
+				if (t.getCode() == KeyCode.ESCAPE) {
+					Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+					alert.initOwner(scene.getWindow());
+					alert.setTitle("Exit Application");
+					alert.setContentText("Do you wanna leave the application?");
+					ButtonType okButton = new ButtonType("Yes", ButtonBar.ButtonData.YES);
+					ButtonType noButton = new ButtonType("No", ButtonBar.ButtonData.NO);
+					alert.getButtonTypes().setAll(okButton, noButton);
+					Optional<ButtonType> result = alert.showAndWait();
+					if (result.get().getText().equalsIgnoreCase("yes")){
+						primaryStage.close();
+					}
+				}
+			}
+		});
 		scene.getStylesheets().add(getClass().getResource("library.css").toExternalForm());
 		primaryStage.setScene(scene);
 	}

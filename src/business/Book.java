@@ -121,5 +121,17 @@ final public class Book implements Serializable {
 	}
 	public int getMaxCheckoutLength() {
 		return maxCheckoutLength;
-	}	
+	}
+	
+	public String getAuthorList()
+	{
+		StringBuilder sb = new StringBuilder();
+		List<Author> au = getAuthors();
+		
+		for(int i = 0 ; i < au.size(); i++)
+			sb.append(au.get(i) + "\n");
+	
+		return sb.toString();
+	}
+	
 }
