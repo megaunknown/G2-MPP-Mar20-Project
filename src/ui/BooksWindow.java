@@ -7,6 +7,8 @@ import business.Book;
 import business.BookCopy;
 import business.ControllerInterface;
 import business.SystemController;
+import business.ValidationException;
+import business.ValidationHelper;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 import javafx.collections.FXCollections;
@@ -37,6 +39,7 @@ public class BooksWindow {
 	public static final BooksWindow INSTANCE = new BooksWindow();
 
 	private GridPane grid;
+	TextField copyIDText;
 
 	public ObservableList<Book> getBooksList()
 	{
@@ -119,20 +122,20 @@ public class BooksWindow {
 		popupGrid.setAlignment(Pos.CENTER);
 		popupGrid.setPrefSize(400, 200);
 		popupGrid.setStyle("-fx-background-color:white;-fx-border-color: black;-fx-border-width:2;-fx-border-radius:3;-fx-hgap:3;-fx-vgap:5;"); 
-		Label copyIDLabel = new Label("Book Copy ID");
-		TextField copyIDText = new TextField();
+		Label copyIDLabel = new Label("Book Copy ID *");
+		copyIDText = new TextField();	
+		
 		popupGrid.add(copyIDLabel, 0, 0);
 		popupGrid.add(copyIDText, 1, 0);
 		Button saveCopyIDBtn = new Button("Save Book Copy");
+		saveCopyIDBtn.setDisable(true);
 		Button closeBtn = new Button("Close");
 		closeBtn.setOnAction(new EventHandler<ActionEvent>() {
-
 			@Override
 			public void handle(ActionEvent event) {
 				addCopyPopup.hide();
-				split.setDisable(false);				
+				split.setDisable(false);			
 			}
-
 		});
 		popupGrid.add(saveCopyIDBtn, 0, 1);
 		popupGrid.add(closeBtn, 1, 1);
@@ -175,17 +178,26 @@ public class BooksWindow {
 
 			@Override
 			public void handle(ActionEvent event) {
-				Book selectedBook = tableView.getSelectionModel().getSelectedItem();
-				BookCopy bookCopy = new BookCopy(selectedBook, Integer.parseInt(copyIDText.getText()), true);
-				DataAccess dataAccess = new DataAccessFacade();
-				dataAccess.saveNewBookCopy(bookCopy);
-				addCopyPopup.hide();
-				split.setDisable(false);
 				
-				//Hanh: refresh window
-				init(primaryStage, split);
+			Book selectedBook = tableView.getSelectionModel().getSelectedItem();
+			BookCopy bookCopy = new BookCopy(selectedBook, Integer.parseInt(copyIDText.getText()), true);
+			DataAccess dataAccess = new DataAccessFacade();
+			dataAccess.saveNewBookCopy(bookCopy);
+			addCopyPopup.hide();
+			split.setDisable(false);
+			
+			//Hanh: refresh window
+			init(primaryStage, split);
+				
 			}
 
+		});
+	    
+	    copyIDText.textProperty().addListener((observable, oldValue, newValue) -> {
+		    if(newValue.isEmpty())
+		    	saveCopyIDBtn.setDisable(true);
+		    else
+		    	saveCopyIDBtn.setDisable(false);
 		});
 
         HBox hBack = new HBox(10);
@@ -200,6 +212,6 @@ public class BooksWindow {
         	div.setMouseTransparent(true);
         	div.setStyle("-fx-padding: 0 1 0 1");
         } );
-
 	}
+	
 }
