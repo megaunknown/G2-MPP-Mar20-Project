@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.time.LocalDate;
 
 public class Fine implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	private double amount;
 	private boolean paid;
 	private LocalDate paidDate;
@@ -20,8 +23,7 @@ public class Fine implements Serializable{
 		this.checkOutEntryID = checkOutEntryID;
 	}
 
-	public int getCheckOutEntryID()
-	{
+	public int getCheckOutEntryID() {
 		return checkOutEntryID;
 	}
 

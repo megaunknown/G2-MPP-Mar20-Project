@@ -6,6 +6,7 @@ import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 
 public abstract class Role {
+	
 	private String userId;
 	private String userPassword;
 
@@ -20,6 +21,7 @@ public abstract class Role {
 	public String getUserPassword() {
 		return userPassword;
 	}
+	
 	public void setUserPassword(String userPassword) {
 		this.userPassword = userPassword;
 	}
@@ -39,9 +41,6 @@ public abstract class Role {
 		if(!passwordFound.equals(password)) {
 			throw new LoginException("Password incorrect");
 		}
-
-//		currentAuth = map.get(id).getAuthorization();
-
 	}
 
 }

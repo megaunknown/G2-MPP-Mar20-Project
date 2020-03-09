@@ -23,7 +23,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
-
 public class BookCopiesWindow {
 	public static final BookCopiesWindow INSTANCE = new BookCopiesWindow();
 

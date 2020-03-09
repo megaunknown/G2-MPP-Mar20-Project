@@ -83,7 +83,7 @@ public class AddMemberWindow {
 					DataAccess dataAccess = new DataAccessFacade();
 					String memberId= UUID.randomUUID().toString();
 					dataAccess.saveNewMember(new LibraryMember(memberId, txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), new Address(txtStreet.getText(), txtCity.getText(), txtState.getText(), txtZip.getText())));
-					AllMembersWindow.INSTANCE.init(primaryStage, split);
+					MembersWindow.INSTANCE.init(primaryStage, split);
 				}
 			}
 		});
@@ -105,7 +105,7 @@ public class AddMemberWindow {
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				AllMembersWindow.INSTANCE.init(primaryStage, split);
+				MembersWindow.INSTANCE.init(primaryStage, split);
 			}
 		});
 

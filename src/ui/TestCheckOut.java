@@ -9,8 +9,6 @@ public class TestCheckOut {
 	public static void main(String[] args)
 	{
 		 CheckOutEntry COE;
-		 BookCopy bookcopy;
-		 Book book;
 		 String strMessage ="";
 		 
 		 COE = searchHelper.createCheckOutEntry("1001",

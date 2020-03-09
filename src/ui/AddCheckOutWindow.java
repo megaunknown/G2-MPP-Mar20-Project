@@ -1,64 +1,39 @@
 package ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.*; 
-import org.controlsfx.control.CheckListView;
-import java.util.Map;
 
-import business.Author;
 import business.Book;
 import business.BookCopy;
 import business.CheckOutEntry;
-import business.Librarian;
-import business.LibraryMember;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 import dataaccess.searchHelper;
-import dataaccess.DataAccessFacade.StorageType;
 import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.PasswordField;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Pair;
 
 
 public class AddCheckOutWindow {
 	public static final AddCheckOutWindow INSTANCE = new AddCheckOutWindow();
 	
-	private SplitPane split;
-
 	/*************************************** UI ************************************/
 	private Label lblLibMemberID,lblBookNumber,lblBookISBN;
 	private TextField txtFieldISBN,txtFieldCopyNumber;
 	
 	/*******************************************************************************/
 	private CheckOutEntry COE;
-	private BookCopy bookcopy;
-	private Book book;
-	
 	/****************************************************************************/
 	private ComboBox<String> cboMemberID;
 	private GridPane grid;
@@ -178,8 +153,7 @@ public class AddCheckOutWindow {
 					}
 					
 				}
-				else
-				{
+				else {
 					UI_Helper_Class.showMessageBoxError(strMessage);
 				}
 
@@ -190,6 +164,23 @@ public class AddCheckOutWindow {
 			@Override
 			public void handle(ActionEvent event) {
 				String strMessage = null;
+				if(txtFieldCopyNumber.getText().length()==0)
+				{
+					UI_Helper_Class.showMessageBoxWarning("You Must Type Book Copy Number");
+					return;
+				}
+				
+				if(txtFieldISBN.getText().length() == 0)
+				{
+					UI_Helper_Class.showMessageBoxWarning("You Must Type Book ISBN");
+					return ;
+				}
+				
+				if(cboMemberID.getValue().length()==0)
+				{
+					UI_Helper_Class.showMessageBoxWarning("You Must Select Member ID.");
+					return;
+				}
 				COE = searchHelper.createCheckOutEntry(cboMemberID.getValue(),
 						LoginWindow.INSTANCE.getUserID(),
 						txtFieldISBN.getText(),
@@ -286,52 +277,6 @@ public class AddCheckOutWindow {
 			}
 		});
 		
-		
-		/****************************** Adding Check Out Records **********************/
-		/*
-		Text checkedOut = new Text("Checked Out Records....");
-		checkedOut.setId("welcome-text");
-        grid.add(checkedOut, 0, 9);
-       
-		GridPane gridCheckedOutRecords = new GridPane();
-		gridCheckedOutRecords.setId("top-container");
-		gridCheckedOutRecords.setAlignment(Pos.TOP_CENTER);
-		gridCheckedOutRecords.setHgap(5);
-		gridCheckedOutRecords.setVgap(10);
-		gridCheckedOutRecords.setPadding(new Insets(25, 25, 25, 25));
-		
-		grid.add(gridCheckedOutRecords, 1, 10,5,1);
-		
-		 
-		TableView<CheckOutEntry> tvCheckedOutRecords;
-		tvCheckedOutRecords = new TableView<CheckOutEntry>();
-		tvCheckedOutRecords.prefHeightProperty().bind(split.heightProperty().subtract(100));    
-		tvCheckedOutRecords.prefWidthProperty().bind(split.widthProperty());;
-                
-	    TableColumn<CheckOutEntry, String> col = new TableColumn<>("SequanceID");	    
-	    col.setCellValueFactory(new PropertyValueFactory<>("entryID"));
-	    tvCheckedOutRecords.getColumns().add(col);
-	    
-	    col = new TableColumn<>("Checkout Date");
-	    col.setCellValueFactory(new PropertyValueFactory<>("checkoutDate"));
-	    tvCheckedOutRecords.getColumns().add(col);
-	    
-	    col = new TableColumn<>("Due Date");
-	    col.setCellValueFactory(new PropertyValueFactory<>("dueDate"));
-	    tvCheckedOutRecords.getColumns().add(col);
-	    
-	    col = new TableColumn<>("Return Date");
-	    col.setCellValueFactory(new PropertyValueFactory<>("returnDate"));
-	    tvCheckedOutRecords.getColumns().add(col);
-	    
-	    col = new TableColumn<>("Librian User");
-	    col.setCellValueFactory(new PropertyValueFactory<>("user"));
-	    tvCheckedOutRecords.getColumns().add(col);
-
-	    tvCheckedOutRecords.setItems(getCheckOutRecords());	    
-	    
-	    grid.add(tvCheckedOutRecords, 0, 11);	
-	    */
 	}
 	
 	public ObservableList<CheckOutEntry> getCheckOutRecords()

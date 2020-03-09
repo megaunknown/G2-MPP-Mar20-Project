@@ -39,7 +39,6 @@ public class TestData {
 		}
 	};
 
-
 	@SuppressWarnings("serial")
 	public List<Author> allAuthors = new ArrayList<Author>() {
 		{
@@ -94,7 +93,6 @@ public class TestData {
 		{}
 	};
 	
-	
 	public static void main(String[] args) {
 		TestData td = new TestData();
 		td.addressData();
@@ -115,8 +113,7 @@ public class TestData {
 		
 	}
 	
-	public void checkOutEntriesData()
-	{
+	public void checkOutEntriesData() {
 		DataAccessFacade.loadCheckOutEntries(allCheckOutEntries);
 	}
 	
@@ -150,4 +147,5 @@ public class TestData {
 			allBooks.get(2).addCopy();
 			DataAccessFacade.loadBookMap(allBooks);
 		}
+		
 }

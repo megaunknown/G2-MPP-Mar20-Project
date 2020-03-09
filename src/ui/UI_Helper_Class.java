@@ -18,4 +18,5 @@ public  class UI_Helper_Class {
 	{
 		new Alert(Alert.AlertType.WARNING, strMessage).showAndWait();
 	}
+	
 }

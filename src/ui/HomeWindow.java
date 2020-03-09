@@ -99,7 +99,7 @@ public class HomeWindow {
             public void handle(ActionEvent event)
             {
         		primaryStage.setTitle("Members Page");
-    	        AllMembersWindow.INSTANCE.init(primaryStage, splitStatus);
+    	        MembersWindow.INSTANCE.init(primaryStage, splitStatus);
     			split.lookupAll(".split-pane-divider").stream()
                 .forEach(div ->  {
                 	div.setMouseTransparent(true);

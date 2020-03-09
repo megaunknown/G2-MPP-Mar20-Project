@@ -31,9 +31,6 @@ public class Start extends Application {
 		primStage = primaryStage;
 		primStage.getIcons().add(new Image("ui/icon.png"));
 		primStage.initStyle(StageStyle.UNDECORATED);
-		//Commented By Mohamed Saleh
-		//LoginWindow.INSTANCE.init(primaryStage);
-		//Added By Mohamed Saleh
 		LoginWindow.INSTANCE.init(primaryStage);
 		
 		//*****************************************/

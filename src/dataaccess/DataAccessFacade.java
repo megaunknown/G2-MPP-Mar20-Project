@@ -15,13 +15,10 @@ import business.Address;
 import business.Author;
 import business.Book;
 import business.BookCopy;
+import business.CheckOutEntry;
 import business.Fine;
 import business.LibraryMember;
 import business.User;
-import dataaccess.DataAccessFacade.StorageType;
-import business.CheckOutEntry;
-import business.CheckOutRecord;
-
 
 public class DataAccessFacade implements DataAccess {
 
@@ -85,7 +82,6 @@ public class DataAccessFacade implements DataAccess {
 		saveToStorage(StorageType.CHECKOUTENTRIES, checkOutEntryMap);
 	}
 	
-	
 	@SuppressWarnings("unchecked")
 	public  static HashMap<String, CheckOutEntry> readCheckOutEntriesMap() {
 		//Returns a Map with name/value pairs being
@@ -113,7 +109,6 @@ public class DataAccessFacade implements DataAccess {
 		//   memberId -> LibraryMember
 		return (HashMap<String, LibraryMember>) readFromStorage(StorageType.MEMBERS);
 	}
-
 
 	@SuppressWarnings("unchecked")
 	public HashMap<String, User> readUsersMap() {
@@ -156,7 +151,6 @@ public class DataAccessFacade implements DataAccess {
 		saveToStorage(StorageType.AUTHORS, authorsMap);
 	}
 
-	
 	public static void loadBookCopiesMap(List<BookCopy> bookCopiesList) {
 		HashMap<String, BookCopy> bookCopies = new HashMap<String, BookCopy>();
 		bookCopiesList.forEach( bc -> bookCopies.put(bc.getBookCopyId(),bc));
@@ -169,13 +163,11 @@ public class DataAccessFacade implements DataAccess {
 		saveToStorage(StorageType.CHECKOUTENTRIES, checkoutEntries);
 	}
 
-
 	static void loadBookMap(List<Book> bookList) {
 		HashMap<String, Book> books = new HashMap<String, Book>();
 		bookList.forEach(book -> books.put(book.getIsbn(), book));
 		saveToStorage(StorageType.BOOKS, books);
 	}
-
 
 	static void loadUserMap(List<User> userList) {
 		HashMap<String, User> users = new HashMap<String, User>();
@@ -225,10 +217,7 @@ public class DataAccessFacade implements DataAccess {
 		return retVal;
 	}
 
-
-
 	final static class Pair<S,T> implements Serializable{
-
 		S first;
 		T second;
 		Pair(S s, T t) {
@@ -255,4 +244,5 @@ public class DataAccessFacade implements DataAccess {
 		}
 		private static final long serialVersionUID = 5399827794066637059L;
 	}
+	
 }

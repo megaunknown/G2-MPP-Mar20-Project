@@ -3,21 +3,16 @@ package business;
 import java.io.Serializable;
 import java.time.LocalDate;
 
-
 public class CheckOutEntry implements Serializable {
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = 1L;
 	private int entryID;
 	private LocalDate checkoutDate;
 	private LocalDate dueDate;
 	private LocalDate returnDate;
-
 	private LibraryMember member;
 	private User user;
 	private BookCopy bookCopy;
-
 
 	public CheckOutEntry(LocalDate checkoutDate, LocalDate dueDate, LocalDate returnDate, LibraryMember member,User user, BookCopy bookCopy) {
 		this.checkoutDate = checkoutDate;
@@ -29,8 +24,7 @@ public class CheckOutEntry implements Serializable {
 
 	}
 
-	public void setEntryID(int entryID)
-	{
+	public void setEntryID(int entryID) {
 		this.entryID  = entryID;
 	}
 
@@ -82,8 +76,7 @@ public class CheckOutEntry implements Serializable {
 		this.bookCopy = bookCopy;
 	}
 	
-	public int getEntryID()
-	{
+	public int getEntryID() {
 		return this.entryID;
 	}
 	

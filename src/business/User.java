@@ -14,9 +14,6 @@ public class User  implements Serializable {
 	private String password;
 	private Role userRole;
 
-	/*
-	 *
-	 * */
 	public User(String id, String pass,Role UserRole) {
 		this.id = id;
 		this.password = pass;
@@ -25,9 +22,6 @@ public class User  implements Serializable {
 		this.roles.add(UserRole);
 	}
 
-	/*
-	 *
-	 * */
 	public User(String id, String pass,List<Role> UserRole) {
 		this.id = id;
 		this.password = pass;
@@ -36,23 +30,14 @@ public class User  implements Serializable {
 		this.roles.addAll(UserRole);
 	}
 
-	/*
-	 *
-	 * */
 	public String getId() {
 		return id;
 	}
 
-	/*
-	 *
-	 * */
 	public String getPassword() {
 		return password;
 	}
 
-	/*
-	 *
-	 * */
 	public boolean hasAdminRole()
 	{
 		boolean bResult = false;
@@ -67,9 +52,6 @@ public class User  implements Serializable {
 		return bResult;
 	}
 
-	/*
-	 *
-	 * */
 	public boolean hasLibrarianRole()
 	{
 		boolean bResult = false;
@@ -83,4 +65,13 @@ public class User  implements Serializable {
 		}
 		return bResult;
 	}
+	
+	public Role getUserRole() {
+		return userRole;
+	}
+
+	public void setUserRole(Role userRole) {
+		this.userRole = userRole;
+	}
+	
 }

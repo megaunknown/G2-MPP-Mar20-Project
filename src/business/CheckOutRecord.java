@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CheckOutRecord implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+	
 	private List<CheckOutEntry> list;
 
 	public CheckOutRecord()
@@ -23,10 +26,4 @@ public class CheckOutRecord implements Serializable{
 		}
 	}
 
-	public void createReturnRecord(CheckOutEntry checkOutRecord)
-	{
-		
-		//Calculate Over Due...
-		
-	}
 }

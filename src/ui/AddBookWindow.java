@@ -29,12 +29,10 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.util.Pair;
-
 
 public class AddBookWindow {
+	
 	public static final AddBookWindow INSTANCE = new AddBookWindow();
-
 	private Label lblISBN, lblTitle,lblAuthors, lblMaxCheckoutLength;
 	RadioButton rbMaxCheckoutLength_7, rbMaxCheckoutLength_21;
 	private TextField txtISBN, txtTitle;
@@ -107,7 +105,6 @@ public class AddBookWindow {
         rbMaxCheckoutLength_7.setToggleGroup(group);
         rbMaxCheckoutLength_7.setSelected(true);
         
-
         rbMaxCheckoutLength_21 = new RadioButton("21 days");
         rbMaxCheckoutLength_21.setToggleGroup(group);
         
@@ -116,7 +113,6 @@ public class AddBookWindow {
         gridMax.add(rbMaxCheckoutLength_21, 1, 0);
         
         grid.add(gridMax,1,4);
-
 
         /***********************************************/
         Button saveBookBtn = new Button("Save");
@@ -193,8 +189,6 @@ public class AddBookWindow {
 			UI_Helper_Class.showMessageBoxError("Error! " + ex.getMessage());
 			return false;
 		}
-		
-		
 		return true;
 	}
 }

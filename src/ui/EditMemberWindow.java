@@ -1,7 +1,5 @@
 package ui;
 
-import java.util.UUID;
-
 import business.Address;
 import business.LibraryMember;
 import business.ValidationException;
@@ -22,10 +20,12 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 public class EditMemberWindow {
+	
 	public static final EditMemberWindow INSTANCE = new EditMemberWindow();
+	
 	private GridPane grid;
 	private Label lblMemberId;
-	private TextField txtFirstName, txtLastName, txtPhone, txtStreet, txtCity, txtState, txtZip, txtMemberID;
+	private TextField txtFirstName, txtLastName, txtPhone, txtStreet, txtCity, txtState, txtZip;
 	private LibraryMember member;
 	
 	/* This class is a singleton */
@@ -47,8 +47,6 @@ public class EditMemberWindow {
         grid.add(scenetitle, 0, 0);
         
         lblMemberId= new Label(this.member.getMemberId());
-        grid.add(new Label("Member ID"),0,1);
-        grid.add(lblMemberId,1,1);
 
         grid.add(new Label("First Name (*)"),0,2);
         txtFirstName = new TextField();
@@ -96,7 +94,7 @@ public class EditMemberWindow {
 				if(isDataValid()) {
 					DataAccess dataAccess = new DataAccessFacade();				
 					dataAccess.editMember(new LibraryMember(lblMemberId.getText(), txtFirstName.getText(), txtLastName.getText(), txtPhone.getText(), new Address(txtStreet.getText(), txtCity.getText(), txtState.getText(), txtZip.getText())));
-					AllMembersWindow.INSTANCE.init(primaryStage, split);
+					MembersWindow.INSTANCE.init(primaryStage, split);
 				}
 			}
 		});
@@ -105,7 +103,7 @@ public class EditMemberWindow {
         backBtn.setOnAction(new EventHandler<ActionEvent>() {
 			@Override
 			public void handle(ActionEvent event) {
-				AllMembersWindow.INSTANCE.init(primaryStage, split);
+				MembersWindow.INSTANCE.init(primaryStage, split);
 			}
 		});
 

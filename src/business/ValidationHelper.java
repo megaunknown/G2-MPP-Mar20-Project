@@ -12,7 +12,7 @@ public class ValidationHelper<E> {
 			throw new ValidationException("Mandatory Field...");
 		}
 		//Hanh added
-		if(e instanceof ObservableList<?> && ((ObservableList) e).isEmpty())
+		if(e instanceof ObservableList<?> && ((ObservableList<?>) e).isEmpty())
 		{
 			throw new ValidationException("Mandatory Field...");
 		}

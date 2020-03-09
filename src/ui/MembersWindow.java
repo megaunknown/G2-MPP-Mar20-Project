@@ -2,9 +2,7 @@ package ui;
 
 import java.util.HashMap;
 
-import business.Book;
 import business.LibraryMember;
-import business.Person;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 import javafx.collections.FXCollections;
@@ -13,37 +11,22 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-public class AllMembersWindow{ //extends Stage implements LibWindow {
-	public static final AllMembersWindow INSTANCE = new AllMembersWindow();
+public class MembersWindow{ //extends Stage implements LibWindow {
+	public static final MembersWindow INSTANCE = new MembersWindow();
 	private GridPane grid;
 	private Text scenetitle;
 	private TableView<LibraryMember> tvMembers;
-	private TextField txtFirstName, txtLastName, txtPhone, txtStreet, txtCity, txtState, txtZip;
-		
-	private boolean isInitialized = false;
-	public boolean isInitialized() {
-		return isInitialized;
-	}
-
-	public void isInitialized(boolean val) {
-		isInitialized = val;
-	}
 
 	private TextArea ta;
 
@@ -52,7 +35,7 @@ public class AllMembersWindow{ //extends Stage implements LibWindow {
 	}
 
 	/* This class is a singleton */
-	private AllMembersWindow() {}
+	private MembersWindow() {}
 
 	public void init(Stage primaryStage, SplitPane split) {
 		grid = new GridPane();
@@ -69,12 +52,8 @@ public class AllMembersWindow{ //extends Stage implements LibWindow {
         tvMembers = new TableView<LibraryMember>();
         tvMembers.prefHeightProperty().bind(split.heightProperty().subtract(100));    
         tvMembers.prefWidthProperty().bind(split.widthProperty());;
-                
-	    TableColumn<LibraryMember, String> col = new TableColumn<>("Member ID");	    
-	    col.setCellValueFactory(new PropertyValueFactory<>("memberId"));
-	    tvMembers.getColumns().add(col);
-	    
-	    col = new TableColumn<>("First Name");
+
+	    TableColumn<LibraryMember, String> col = new TableColumn<>("First Name");
 	    col.setCellValueFactory(new PropertyValueFactory<>("firstName"));
 	    tvMembers.getColumns().add(col);
 	    

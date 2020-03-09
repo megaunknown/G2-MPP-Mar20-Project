@@ -7,8 +7,6 @@ import business.Book;
 import business.BookCopy;
 import business.ControllerInterface;
 import business.SystemController;
-import business.ValidationException;
-import business.ValidationHelper;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 import javafx.collections.FXCollections;
@@ -30,11 +28,6 @@ import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
-class BookView
-{
-	
-}
-
 public class BooksWindow {
 	public static final BooksWindow INSTANCE = new BooksWindow();
 
@@ -47,7 +40,6 @@ public class BooksWindow {
 		ObservableList<Book> strings = FXCollections.observableArrayList();
 		DataAccess da = new DataAccessFacade();
 		HashMap<String,Book> authMap = da.readBooksMap();
-//		authMap.values().forEach(a -> strings.add(a));
 		authMap.values().forEach(a -> {
 			List<BookCopy> copies = con.allBookCopies(a);
 			int available=0;
@@ -69,8 +61,6 @@ public class BooksWindow {
 
 	public void init(Stage primaryStage, SplitPane split) {
 		primaryStage.setTitle("Books Page");
-//		DataAccess dataAccess = new DataAccessFacade();
-//		dataAccess.readBooksMap();
 		Text scenetitle;
 		grid = new GridPane();
 		scenetitle = new Text("List of Books");

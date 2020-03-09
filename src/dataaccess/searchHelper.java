@@ -14,23 +14,19 @@ import ui.UI_Helper_Class;
 
 public class searchHelper {
 	
-	
 	public static CheckOutEntry createCheckOutEntry(String MemberID,
 													String currentUserID,
 													String ISBN,
 													int BookCopy,
-													String strMessage)
-	{
+													String strMessage) {
 		DataAccess dataAccess = new DataAccessFacade();
 		
-		HashMap<String,BookCopy> bookCopies = dataAccess.readBookCopiesMap();
 		HashMap<String,Book> books =  dataAccess.readBooksMap();
 		HashMap<String,LibraryMember> LibMember = dataAccess.readMembersMap();
 		HashMap<String,User> users = dataAccess.readUsersMap();
 		
 		Book book = books.get(ISBN);
 		
-		@SuppressWarnings("unlikely-arg-type")
 		LibraryMember libryMember = LibMember.get(MemberID);
 		
 		User usr = users.get(currentUserID);
@@ -84,7 +80,7 @@ public class searchHelper {
 		
 		return checkOutentry;
 	}
-/*	*/
+
 	public BookCopy searchBookCopy(String ISBN, int copyNum,String refMsg) {
 		DataAccess da = new DataAccessFacade();
 		HashMap<String, Book> books = da.readBooksMap();
@@ -103,22 +99,19 @@ public class searchHelper {
 		return bookCopy;
 	}
 
-	public static BookCopy getBookCopy(String ISBN, int BookCopy)
-	{
+	public static BookCopy getBookCopy(String ISBN, int BookCopy) {
 		DataAccess dataAccess = new DataAccessFacade();
 		HashMap<String,BookCopy> BookCopyListObj =  dataAccess.readBookCopiesMap();
 		return BookCopyListObj.get(ISBN+"-" + BookCopy);
 	}
 	
-	public static Book getBookByISBN(String strISBN)
-	{
+	public static Book getBookByISBN(String strISBN) {
 		DataAccess dataAccess = new DataAccessFacade();
 		HashMap<String,Book> books =  dataAccess.readBooksMap();
 		return books.get(strISBN);
 	}
 	
-	public static boolean checkBookAndBookCopy(String ISBN,int copyNumber)
-	{
+	public static boolean checkBookAndBookCopy(String ISBN,int copyNumber) {
 		Book book = getBookByISBN(ISBN);
 		boolean bResult = false;
 		if(book.getCopyNums().contains(copyNumber))
@@ -126,8 +119,7 @@ public class searchHelper {
 		return bResult;
 	}
 	
-	public static boolean checkBookCopy(String ISBN,int copyNumber)
-	{
+	public static boolean checkBookCopy(String ISBN,int copyNumber) {
 		Book book = getBookByISBN(ISBN);
 		boolean bResult = false;
 		if(book.getCopyNums().contains(copyNumber))
@@ -135,8 +127,7 @@ public class searchHelper {
 		return bResult;
 	}
 	
-	public static List<String> getLibraryMembersIDs()
-	{
+	public static List<String> getLibraryMembersIDs() {
 		List<String> strings = new ArrayList<String>();
 		DataAccess da = new DataAccessFacade();
 		HashMap<String,LibraryMember> membersMap = da.readMembersMap();
@@ -144,4 +135,5 @@ public class searchHelper {
 		
 		return strings;
 	}
+	
 }
