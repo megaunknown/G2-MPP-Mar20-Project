@@ -85,46 +85,13 @@ public class AddCheckOutWindow {
 	{
 		DataAccess da = new DataAccessFacade();
 		//First Part ===> Save The Changes to Book Copy
-		HashMap<Integer,BookCopy> hasMapBookCopies = da.readBookCopiesMap();
-		// Using for-each loop 
-        for (Map.Entry mapElement : hasMapBookCopies.entrySet()) { 
-            String bookCopy = (String)mapElement.getKey(); 
-            bookcopy = (BookCopy)mapElement.getValue();
-            book = bookcopy.getBook();
-            if(bookCopy.equals(txtFieldCopyNumber.getText()) && 
-               book.getIsbn().equals(txtFieldISBN.getText()))
-            {
-            	bookcopy.changeAvailability();
-            	
-            	//Write the HashMap Again...
-            	List<BookCopy> bcList = HashMapToList(hasMapBookCopies);
-            	DataAccessFacade.loadBookCopiesMap(bcList);
-            	break;
-            }
-        }
-        
-        //Second Part ==> Save New Entry to Checkout
-        HashMap<String, CheckOutEntry> readCheckOutEntries = DataAccessFacade.readCheckOutEntriesMap();
-        readCheckOutEntries.put(COE.getEntryID()+"", COE);
-        DataAccessFacade.saveToStorage(StorageType.CHECKOUTENTRIES, readCheckOutEntries);
-        
-        
-        
+		HashMap<String,BookCopy> hasMapBookCopies = da.readBookCopiesMap();
+		BookCopy BC = hasMapBookCopies.get(txtFieldISBN.getText()+ "-" + txtFieldCopyNumber.getText());
+		da.changeBookCopyVisiblity(BC);
+        //Second Part ==> Save New Entry to Checkout  
+        DataAccessFacade.saveNewCheckOutEntry(COE);
 	}
-	
-	private List<BookCopy> HashMapToList(HashMap<Integer,BookCopy> hasMapBookCopies)
-	{
-		List<BookCopy> mList= new ArrayList<BookCopy>();
-		
-		 for (Map.Entry mapElement : hasMapBookCopies.entrySet()) { 
-	            String bookCopy = (String)mapElement.getKey(); 
-	            BookCopy bookcopy = (BookCopy)mapElement.getValue();
-	            mList.add(bookcopy);
-	        } 
-	
-		return mList;
-	}
-	
+
 	public void init(Stage primaryStage, SplitPane split) {
 		primaryStage.setTitle("Checkout Book & Search Books");
 		grid = new GridPane();  
@@ -167,6 +134,26 @@ public class AddCheckOutWindow {
 			public void handle(ActionEvent event) {
 				String strMessage = null;
 				
+				
+				
+				if(txtFieldCopyNumber.getText().length()==0)
+				{
+					UI_Helper_Class.showMessageBoxWarning("You Must Type Book Copy Number");
+					return;
+				}
+				
+				if(txtFieldISBN.getText().length() == 0)
+				{
+					UI_Helper_Class.showMessageBoxWarning("You Must Type Book ISBN");
+					return ;
+				}
+				
+				if(cboMemberID.getValue().length()==0)
+				{
+					UI_Helper_Class.showMessageBoxWarning("You Must Select Member ID.");
+					return;
+				}
+				
 				COE = searchHelper.createCheckOutEntry(cboMemberID.getValue(),
 						LoginWindow.INSTANCE.getUserID(),
 						txtFieldISBN.getText(),
@@ -175,9 +162,17 @@ public class AddCheckOutWindow {
 				
 				if(strMessage == null)
 				{
+					try
+					{
+						SaveChanges();
+						UI_Helper_Class.showMessageBoxInfo("Checkout Entry has been Saved Successfully.");
+						
+					}
+					catch(Exception e)
+					{
+						UI_Helper_Class.showMessageBoxError("Error during Checkout Process.");
+					}
 					
-					UI_Helper_Class.showMessageBoxInfo("Checkout Entry has been Saved Successfully.");
-					SaveChanges();
 				}
 				else
 				{
@@ -199,16 +194,22 @@ public class AddCheckOutWindow {
 				
 				if(strMessage == null)
 				{
-					UI_Helper_Class.showMessageBoxInfo("Checkout Entry has been Saved Successfully.");
-					SaveChanges();
-					clear();
+					try
+					{
+						SaveChanges();
+						UI_Helper_Class.showMessageBoxInfo("Checkout Entry has been Saved Successfully.");
+						clear();
+					}
+					catch(Exception e)
+					{
+						UI_Helper_Class.showMessageBoxError("Error during Checkout Process.");
+					}
+					
 				}
 				else
 				{
 					UI_Helper_Class.showMessageBoxError(strMessage);
 				}
-					
-				
 			}
 		});
 
@@ -230,7 +231,7 @@ public class AddCheckOutWindow {
 		/****************************** Search Book By ISBN **********************/
 		 grid.add(new HBox(100), 0, 5);
 		 
-		Text search = new Text("Search Book Data");
+		Text search = new Text("Search Book By ISBN");
 		search.setId("welcome-text");
         grid.add(search, 0, 6);
         
@@ -249,13 +250,20 @@ public class AddCheckOutWindow {
 			@Override
 			public void handle(ActionEvent event) {
 			
+				if(isbnTextField.getText().toString().length() == 0)
+				{
+					UI_Helper_Class.showMessageBoxWarning("You Must Type Book ISBN");
+					return ;
+				}
+				
 				String strISBN = isbnTextField.getText();
 				DataAccess ds = new DataAccessFacade();
 				HashMap<String,Book> bookList = ds.readBooksMap();
 				Book book = bookList.get(strISBN);
+				
 				if(book == null)
 				{
-					UI_Helper_Class.showMessageBoxError("The book is not avaliable");
+					UI_Helper_Class.showMessageBoxError(book.getTitle() + " book is not avaliable");
 					return;
 				}
 				
@@ -266,13 +274,14 @@ public class AddCheckOutWindow {
 					if(CP.isAvailable())
 					{
 						bSearchResult= true;
-						UI_Helper_Class.showMessageBoxInfo("The Book Is Avaliable");
+						UI_Helper_Class.showMessageBoxInfo(book.getTitle() + " book copy Is Avaliable");
 						break;
 					}
 				}
+				
 				if(!bSearchResult)
 				{
-					UI_Helper_Class.showMessageBoxError("There is no available copies");
+					UI_Helper_Class.showMessageBoxError(book.getTitle() + " book copy is no available copies");
 					
 				}
 			}

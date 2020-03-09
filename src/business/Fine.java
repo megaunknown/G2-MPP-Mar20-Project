@@ -1,8 +1,9 @@
 package business;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
-public class Fine {
+public class Fine implements Serializable{
 	private double amount;
 	private boolean paid;
 	private LocalDate paidDate;
