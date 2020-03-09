@@ -38,7 +38,7 @@ public class AddBookWindow {
 	private Label lblISBN, lblTitle,lblAuthors, lblMaxCheckoutLength;
 	RadioButton rbMaxCheckoutLength_7, rbMaxCheckoutLength_21;
 	private TextField txtISBN, txtTitle;
-	private final CheckListView<Pair<String, Author>> checkListViewAuthors = new CheckListView<Pair<String,Author>>();
+	private final CheckListView< Author> checkListViewAuthors = new CheckListView<Author>();
 
 	private GridPane grid;
 	
@@ -48,12 +48,12 @@ public class AddBookWindow {
 		checkListViewAuthors.getCheckModel().clearChecks();
 	}
 
-	public ObservableList<Pair<String,Author>> getAuthorsList()
+	public ObservableList<Author> getAuthorsList()
 	{
-		ObservableList<Pair<String,Author>> obsList = FXCollections.observableArrayList();
+		ObservableList<Author> obsList = FXCollections.observableArrayList();
 		DataAccess da = new DataAccessFacade();
 		HashMap<String,Author> authMap = da.readAuthorsMap();
-		authMap.values().forEach(a -> obsList.add(new Pair <String,Author> (a.getAuthorName(),a)));
+		authMap.values().forEach(a -> obsList.add(a));
 		return obsList;
 	}
 
@@ -91,11 +91,10 @@ public class AddBookWindow {
         checkListViewAuthors.setPrefWidth(400);
         checkListViewAuthors.setPrefHeight(400);
         grid.add(checkListViewAuthors,1,3);
-
-        checkListViewAuthors.getCheckModel().getCheckedItems().addListener(new ListChangeListener<Pair<String,Author>>()
+        checkListViewAuthors.getCheckModel().getCheckedItems().addListener(new ListChangeListener<Author>()
         {
 			@Override
-			public void onChanged(Change<? extends Pair<String, Author>> c) {
+			public void onChanged(Change<? extends Author> c) {
 				checkListViewAuthors.getCheckModel().getCheckedItems();
 			}
         });
@@ -128,10 +127,10 @@ public class AddBookWindow {
 			@Override
 			public void handle(ActionEvent event) {
 				if(isDataValid())
-				{				
-					ObservableList<Pair<String,Author>> strings = checkListViewAuthors.getCheckModel().getCheckedItems();
+				{	
+					ObservableList<Author> strings = checkListViewAuthors.getCheckModel().getCheckedItems();
 					List<Author> lst = new ArrayList<Author>();
-					strings.forEach(val -> lst.add(val.getValue()));
+					strings.forEach(val -> lst.add(val));
 					int maxCheckoutLength= rbMaxCheckoutLength_7.isSelected()? 7: 21;
 					DataAccess dataAccess = new DataAccessFacade();
 					dataAccess.saveNewBook(new Book(txtISBN.getText(), txtTitle.getText(), maxCheckoutLength, lst));
@@ -145,9 +144,9 @@ public class AddBookWindow {
 			public void handle(ActionEvent event) {
 				if(isDataValid())
 				{
-					ObservableList<Pair<String,Author>> strings = checkListViewAuthors.getCheckModel().getCheckedItems();
+					ObservableList<Author> strings = checkListViewAuthors.getCheckModel().getCheckedItems();
 					List<Author> lst = new ArrayList<Author>();
-					strings.forEach(val -> lst.add(val.getValue()));
+					strings.forEach(val -> lst.add(val));
 					int maxCheckoutLength= rbMaxCheckoutLength_7.isSelected()? 7: 21;
 					DataAccess dataAccess = new DataAccessFacade();
 					dataAccess.saveNewBook(new Book(txtISBN.getText(), txtTitle.getText(), maxCheckoutLength, lst));

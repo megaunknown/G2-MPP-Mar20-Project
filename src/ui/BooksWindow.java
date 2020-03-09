@@ -47,7 +47,7 @@ public class BooksWindow {
 		ObservableList<Book> strings = FXCollections.observableArrayList();
 		DataAccess da = new DataAccessFacade();
 		HashMap<String,Book> authMap = da.readBooksMap();
-		authMap.values().forEach(a -> strings.add(a));
+//		authMap.values().forEach(a -> strings.add(a));
 		authMap.values().forEach(a -> {
 			List<BookCopy> copies = con.allBookCopies(a);
 			int available=0;
