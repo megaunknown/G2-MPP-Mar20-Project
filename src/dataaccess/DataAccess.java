@@ -13,8 +13,8 @@ public interface DataAccess {
 	public HashMap<String,User> readUsersMap();
 	public HashMap<String, LibraryMember> readMembersMap();
 	public HashMap<String,Author> readAuthorsMap();
-	public HashMap<Integer, BookCopy> readBookCopiesMap();
-//	public HashMap<String,CheckOutEntry> readCheckOutEntry();
+	public HashMap<String, BookCopy> readBookCopiesMap();
+	public void changeBookCopyVisiblity(BookCopy bookCopy);
 //	public HashMap<String,CheckOutRecord> readCheckOutRecords();
 	public void saveNewMember(LibraryMember member);
 	public void editMember(LibraryMember member);

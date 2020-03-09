@@ -10,6 +10,7 @@ import business.BookCopy;
 import business.CheckOutEntry;
 import business.LibraryMember;
 import business.User;
+import ui.UI_Helper_Class;
 
 public class searchHelper {
 	
@@ -22,25 +23,30 @@ public class searchHelper {
 	{
 		DataAccess dataAccess = new DataAccessFacade();
 		
-		HashMap<Integer,BookCopy> bookCopies = dataAccess.readBookCopiesMap();
+		HashMap<String,BookCopy> bookCopies = dataAccess.readBookCopiesMap();
 		HashMap<String,Book> books =  dataAccess.readBooksMap();
 		HashMap<String,LibraryMember> LibMember = dataAccess.readMembersMap();
 		HashMap<String,User> users = dataAccess.readUsersMap();
 		
 		Book book = books.get(ISBN);
+		
 		@SuppressWarnings("unlikely-arg-type")
-		LibraryMember libryMember = LibMember.get(LibMember);
+		LibraryMember libryMember = LibMember.get(MemberID);
+		
 		User usr = users.get(currentUserID);
 		
 		if(libryMember == null)
 		{
 			strMessage = "Library Member ID is Not Valid";
+			UI_Helper_Class.showMessageBoxError(strMessage);
 			return null;
 		}
 		
 		if(book == null)
 		{
 			strMessage = "ISBN Not Valid";
+
+			UI_Helper_Class.showMessageBoxError(strMessage);
 			return null;
 		}
 		
@@ -49,34 +55,36 @@ public class searchHelper {
 		if(bookCopy ==  null)
 		{
 			strMessage = "Book Copy is Not Valid";
+
+			UI_Helper_Class.showMessageBoxError(strMessage);
 			return null;
 		}
 		
-		if(bookCopy.isAvailable())
+		if(!bookCopy.isAvailable())
 		{
 			strMessage = "Book Copy is Not Avaliable.";
+
+			UI_Helper_Class.showMessageBoxError(strMessage);
 			return null;
 		}
 		
 		if(usr == null)
 		{
 			strMessage = "Unable to fetch current USER";
+			UI_Helper_Class.showMessageBoxError(strMessage);
 			return null;
 		}
 		
 		LocalDate currentDate = LocalDate.now(); // Create a date object
 		LocalDate dueDate = currentDate.plusDays(book.getMaxCheckoutLength());
 		
+		HashMap<String,CheckOutEntry> CheckOutentries = DataAccessFacade.readCheckOutEntriesMap();
 		CheckOutEntry checkOutentry = new CheckOutEntry(currentDate, dueDate, null, libryMember, usr, bookCopy);
-		checkOutentry.setEntryID(bookCopies.size()+1);
-		
-		
-		bookCopy.changeAvailability();
-		
+		checkOutentry.setEntryID(CheckOutentries.size()+1);
 		
 		return checkOutentry;
 	}
-
+/*	*/
 	public BookCopy searchBookCopy(String ISBN, int copyNum,String refMsg) {
 		DataAccess da = new DataAccessFacade();
 		HashMap<String, Book> books = da.readBooksMap();
@@ -94,22 +102,12 @@ public class searchHelper {
 		BookCopy bookCopy = book.getCopy(copyNum);
 		return bookCopy;
 	}
-	
+
 	public static BookCopy getBookCopy(String ISBN, int BookCopy)
 	{
 		DataAccess dataAccess = new DataAccessFacade();
-		HashMap<String,Book> books =  dataAccess.readBooksMap();
-		BookCopy[] bookCopies = books.get(ISBN).getCopies();
-		BookCopy bookCpy = null;
-		for(int i = 0 ; i < bookCopies.length ; i++)
-		{
-			if(bookCopies[i].getCopyNum() == BookCopy)
-			{
-				bookCpy = bookCopies[i];
-				break;
-			}	
-		}
-		return bookCpy;
+		HashMap<String,BookCopy> BookCopyListObj =  dataAccess.readBookCopiesMap();
+		return BookCopyListObj.get(ISBN+"-" + BookCopy);
 	}
 	
 	public static Book getBookByISBN(String strISBN)

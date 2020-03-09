@@ -47,7 +47,15 @@ public class DataAccessFacade implements DataAccess {
 		mems.replace(memberId, member);
 		saveToStorage(StorageType.MEMBERS, mems);
 	}
-
+	
+	public void changeBookCopyVisiblity(BookCopy bookCopy) {
+		HashMap<String, BookCopy> bookcopies = readBookCopiesMap();
+		BookCopy bookCopyTmp = bookcopies.get(bookCopy.getBookCopyId());
+		bookCopyTmp.changeAvailability();
+		bookcopies.replace(bookCopy.getBookCopyId(), bookCopyTmp);
+		saveToStorage(StorageType.BOOKCOPIES, bookcopies);
+	}
+	
 	public void saveNewBook(Book book) {
 		HashMap<String, Book> books = readBooksMap();
 		String isbn = book.getIsbn();
@@ -56,8 +64,8 @@ public class DataAccessFacade implements DataAccess {
 	}
 
 	public void saveNewBookCopy(BookCopy bookCopy) {
-		HashMap<Integer, BookCopy> bookCopies = readBookCopiesMap();
-		int copyNum = bookCopy.getCopyNum();
+		HashMap<String, BookCopy> bookCopies = readBookCopiesMap();
+		String copyNum = bookCopy.getBookCopyId();
 		bookCopies.put(copyNum, bookCopy);
 		saveToStorage(StorageType.BOOKCOPIES, bookCopies);
 	}
@@ -69,6 +77,14 @@ public class DataAccessFacade implements DataAccess {
 		saveToStorage(StorageType.MEMBERS, libraryMemberMap);
 	}
 	
+	public static void saveNewCheckOutEntry(CheckOutEntry checkOutEntry)
+	{
+		HashMap<String, CheckOutEntry> checkOutEntryMap = readCheckOutEntriesMap();
+		String entryID = checkOutEntry.getEntryID()+"";
+		checkOutEntryMap.put(entryID, checkOutEntry);
+		saveToStorage(StorageType.CHECKOUTENTRIES, checkOutEntryMap);
+	}
+	
 	
 	@SuppressWarnings("unchecked")
 	public  static HashMap<String, CheckOutEntry> readCheckOutEntriesMap() {
@@ -78,10 +94,10 @@ public class DataAccessFacade implements DataAccess {
 	}
 	
 	@SuppressWarnings("unchecked")
-	public  HashMap<Integer, BookCopy> readBookCopiesMap() {
+	public  HashMap<String, BookCopy> readBookCopiesMap() {
 		//Returns a Map with name/value pairs being
 		//   CopyId -> BookCopy
-		return (HashMap<Integer, BookCopy>) readFromStorage(StorageType.BOOKCOPIES);
+		return (HashMap<String, BookCopy>) readFromStorage(StorageType.BOOKCOPIES);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -143,15 +159,14 @@ public class DataAccessFacade implements DataAccess {
 	
 	public static void loadBookCopiesMap(List<BookCopy> bookCopiesList) {
 		HashMap<String, BookCopy> bookCopies = new HashMap<String, BookCopy>();
-		bookCopiesList.forEach( bc -> bookCopies.put(bc.getCopyNum()+"",bc));
+		bookCopiesList.forEach( bc -> bookCopies.put(bc.getBookCopyId(),bc));
 		saveToStorage(StorageType.BOOKCOPIES, bookCopies);
 	}
-	
-	static void loadBookCopiesList(List<BookCopy> bookCopiesList) {
-		saveToStorage(StorageType.BOOKCOPIES, bookCopiesList);
-	}
+
 	static void loadCheckOutEntries(List<CheckOutEntry> checkoutList) {
-		saveToStorage(StorageType.CHECKOUTENTRIES, checkoutList);
+		HashMap<String, CheckOutEntry> checkoutEntries = new HashMap<String, CheckOutEntry>();
+		checkoutList.forEach( bc -> checkoutEntries.put(bc.getEntryID()+"",bc));
+		saveToStorage(StorageType.CHECKOUTENTRIES, checkoutEntries);
 	}
 
 
@@ -240,9 +255,4 @@ public class DataAccessFacade implements DataAccess {
 		}
 		private static final long serialVersionUID = 5399827794066637059L;
 	}
-
-
-
-
-
 }
