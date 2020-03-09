@@ -1,9 +1,12 @@
 package ui;
 
 import java.util.HashMap;
+import java.util.List;
 
 import business.Book;
 import business.BookCopy;
+import business.ControllerInterface;
+import business.SystemController;
 import dataaccess.DataAccess;
 import dataaccess.DataAccessFacade;
 import javafx.collections.FXCollections;
@@ -37,10 +40,24 @@ public class BooksWindow {
 
 	public ObservableList<Book> getBooksList()
 	{
+		ControllerInterface con = new SystemController();		
 		ObservableList<Book> strings = FXCollections.observableArrayList();
 		DataAccess da = new DataAccessFacade();
 		HashMap<String,Book> authMap = da.readBooksMap();
 		authMap.values().forEach(a -> strings.add(a));
+		authMap.values().forEach(a -> {
+			List<BookCopy> copies = con.allBookCopies(a);
+			int available=0;
+			for(BookCopy copy: copies)
+			{
+				if(copy.isAvailable())
+					available += 1;
+			}
+			
+			a.setNumAvailableCopies(available);
+			strings.add(a);
+		});
+
 		return strings;
 	}
 
@@ -113,7 +130,7 @@ public class BooksWindow {
 			@Override
 			public void handle(ActionEvent event) {
 				addCopyPopup.hide();
-				split.setDisable(false);
+				split.setDisable(false);				
 			}
 
 		});
@@ -142,6 +159,7 @@ public class BooksWindow {
 			public void handle(ActionEvent event) {
 				addCopyPopup.show(primaryStage);
 				split.setDisable(true);
+				tableView.setItems(getBooksList());
 			}
 
 		});
@@ -163,6 +181,9 @@ public class BooksWindow {
 				dataAccess.saveNewBookCopy(bookCopy);
 				addCopyPopup.hide();
 				split.setDisable(false);
+				
+				//Hanh: refresh window
+				init(primaryStage, split);
 			}
 
 		});
