@@ -72,7 +72,7 @@ public class BookCopiesWindow {
 	                imageView.setImage(null);
 	            } else {
 	                // set image for non-empty cell
-	                imageView.setImage(item ? new Image("ui/yes.png") : new Image("ui/no.jpg"));
+	                imageView.setImage(item ? new Image("ui/yes.png") : new Image("ui/no.png"));
 	            }
 	        }
 
