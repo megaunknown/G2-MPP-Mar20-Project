@@ -18,6 +18,7 @@ final public class Book implements Serializable {
 	private String isbn;
 	private String title;
 	private int maxCheckoutLength;
+	private int numAvailableCopies;
 
 	public Book(String isbn, String title, int maxCheckoutLength, List<Author> authors) {
 		this.isbn = isbn;
@@ -25,12 +26,18 @@ final public class Book implements Serializable {
 		this.maxCheckoutLength = maxCheckoutLength;
 		this.authors = Collections.unmodifiableList(authors);
 		copies = new BookCopy[]{new BookCopy(this, 1, true)};
+		numAvailableCopies= copies.length;
 	}
 
 	public void updateCopies(BookCopy copy) {
 		for(int i = 0; i < copies.length; ++i) {
 			BookCopy c = copies[i];
 			if(c.equals(copy)) {
+				//Hanh
+				if(c.isAvailable() != copy.isAvailable())
+				{
+					this.numAvailableCopies = copy.isAvailable()? this.numAvailableCopies + 1: this.numAvailableCopies - 1;
+				}
 				copies[i] = copy;
 
 			}
@@ -51,6 +58,8 @@ final public class Book implements Serializable {
 		System.arraycopy(copies, 0, newArr, 0, copies.length);
 		newArr[copies.length] = new BookCopy(this, copies.length +1, true);
 		copies = newArr;
+		//Hanh
+		this.numAvailableCopies += 1;
 	}
 
 
@@ -93,6 +102,14 @@ final public class Book implements Serializable {
 
 	public String getIsbn() {
 		return isbn;
+	}	
+
+	public int getNumAvailableCopies() {
+		return numAvailableCopies;
+	}
+
+	public void setNumAvailableCopies(int numAvailableCopies) {
+		this.numAvailableCopies = numAvailableCopies;
 	}
 
 	public BookCopy getNextAvailableCopy() {

@@ -25,6 +25,10 @@ import javafx.scene.text.Text;
 import javafx.stage.Popup;
 import javafx.stage.Stage;
 
+class BookView
+{
+	
+}
 
 public class BooksWindow {
 	public static final BooksWindow INSTANCE = new BooksWindow();
@@ -45,9 +49,9 @@ public class BooksWindow {
 
 	public void init(Stage primaryStage, SplitPane split) {
 		primaryStage.setTitle("Books Page");
-		DataAccess dataAccess = new DataAccessFacade();
-		dataAccess.readBooksMap();
-		 Text scenetitle;
+//		DataAccess dataAccess = new DataAccessFacade();
+//		dataAccess.readBooksMap();
+		Text scenetitle;
 		grid = new GridPane();
 		scenetitle = new Text("List of Books");
         scenetitle.setId("welcome-text");
@@ -72,8 +76,11 @@ public class BooksWindow {
 
 	    TableColumn<Book, String> maxCheckoutLengthCol = new TableColumn<>("Max Checkout Length");
 	    maxCheckoutLengthCol.setCellValueFactory(new PropertyValueFactory<>("maxCheckoutLength"));
+	    
+	    TableColumn<Book, String> AvailableBookCopyNum = new TableColumn<>("Num of Available Copies");
+	    AvailableBookCopyNum.setCellValueFactory(new PropertyValueFactory<>("numAvailableCopies"));
 
-	    tableView.getColumns().addAll(isbnCol, titleCol, maxCheckoutLengthCol);
+	    tableView.getColumns().addAll(isbnCol, titleCol, maxCheckoutLengthCol, AvailableBookCopyNum);
 
 	    tableView.setItems(getBooksList());
 	    tableView.setMaxWidth(10000);
